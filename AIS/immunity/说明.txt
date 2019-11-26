@@ -1,0 +1,13 @@
+提供一个人工免疫算法源程序，其算法过程包括： 
+1.设置各参数 
+2.随机产生初始群体——pop=initpop(popsize,chromlength) 
+3.故障类型编码，每一行为一种！code(1,:)，正常；code(2,:)，50％；code(3,:)，150％。实际故障测得数据编码，这里Unnoralcode,188％ 
+4.开始迭代（M次）： 
+	1）计算目标函数值：欧氏距离[objvalue]=calobjvalue(pop,i) 
+	2）计算群体中每个个体的适应度fitvalue=calfitvalue(objvalue) 
+	3）选择newpop=selection(pop,fitvalue) objvalue=calobjvalue(newpop,i) ％ 交叉
+		   newpop=crossover(newpop,pc,k) objvalue=calobjvalue(newpop,i)  ％ 变异
+		   newpop=mutation(newpop,pm) objvalue=calobjvalue(newpop,i) ％ 
+5.求出群体中适应值最大的个体及其适应值 
+6.迭代停止判断。
+(provide a source of artificial immune algorithm, the algorithm process include : 1. Two of the parameters set. Initial randomly generated groups-- pop = initpop (popsize, chromlength) 3. Fault type coding, each act a! Code (1 :), normal; Code (2, :), 50%; Code (3 :), 150%. Fault actual measured data coding, here Unnoralcode, 188% 4. Beginning iteration (M) : 1) the objective function value : Euclidean distance [objvalue] = calobjvalue (pop, i) 2) calculation of each individual groups of fitness calfitvalue fitvalue = ( objvalue) 3) = newpop choice selection (pop, fitvalue) objvalue = calobjvalue (newpop, i) =% newpop cross-crossover (newpop, pc, k) = calobjvalue objvalue (newpop, i) =% variation newpop mutation (newpop, pm ) objvalue = calobjvalue (newpop, i)% 5. groups sought to adapt th)
