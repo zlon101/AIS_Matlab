@@ -10,10 +10,10 @@ for i = 1:2
     load coverDirs;
     cPath = [coverRoot, coverDirs(i).name];
     bestAbs{i,1} = coverDirs(i).name;
-    
+    save('bestAbs','bestAbs'); clear bestAbs;
     clear coverDirs bestAbs bestFits TAbs;
-    [bestFits,TAbs,~,~] = CSA(cPath);
     
+    [bestFits,TAbs,~,~] = CSA(cPath);
     TAbs = cell2mat(TAbs);
     [vmin,~] = min(bestFits); 
     inds = (bestFits==vmin);
