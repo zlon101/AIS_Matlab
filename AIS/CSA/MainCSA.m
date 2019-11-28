@@ -1,4 +1,5 @@
-coverRoot = 'E:\astego\Images\BOSS_ALL\';
+% local fixed
+coverRoot = 'E:\astego\Images\BOSS_1000\';
 % 遍历所有**格式文件
 coverDirs = dir([coverRoot, '*.pgm']); % coverDirs(1)=[];coverDirs(1)=[];
 num = length(coverDirs);
