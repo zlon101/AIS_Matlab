@@ -58,7 +58,7 @@ for i=1:Iters
 Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas cell
 save([pwd,'\genes.mat'], 'genes'); clear genes;
 load([pwd,'\Memory.mat']);
-[fits, Memory] = calcuFit(Abs, embedParas, Memory);
+[fits, Memory] = calcuFit(Abs, embedParas, Memory); clear calcuFit;
 save('Memory','Memory');clear Memory;
 
 load([pwd,'\genes.mat']);
@@ -100,7 +100,6 @@ tmpGenes(pcs,:) = genes(1:NumCloned, :);
 genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
 % for-end
 end
-% bestFits,bestAbs,meanFits,Memory
 load([pwd,'\Memory.mat']);
-clear genes tmpGenes embedParas;
+clearvars -except bestFits bestAbs meanFits Memory;
 end

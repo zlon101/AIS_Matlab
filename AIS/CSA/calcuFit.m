@@ -50,5 +50,5 @@ fits = eval(f);
 imprime(1,vxp,vyp,vzp,x,y,fits,1,1);
 % -------------------≤‚ ‘Castro----------
 %}
-clear embedParas sharpedData sharpedStegoData;
+clearvars -except fits Memory;
 end

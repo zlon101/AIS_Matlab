@@ -13,7 +13,7 @@ for i = 1:2
     save('bestAbs','bestAbs'); clear bestAbs;
     clear coverDirs bestAbs bestFits TAbs;
     
-    [bestFits,TAbs,~,~] = CSA(cPath);
+    [bestFits,TAbs,~,~] = CSA(cPath);clear CSA;
     TAbs = cell2mat(TAbs);
     [vmin,~] = min(bestFits); 
     inds = (bestFits==vmin);
