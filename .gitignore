@@ -7,6 +7,8 @@ win32/
 win64/
 CostDistor/适应度数据/
 ensemble_2.0/训练参数/
+1tool/z_test.m
+embedAlgorithm/ztest.m
 *.jpg
 *.bmp
 *.vscode
