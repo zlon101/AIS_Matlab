@@ -1,18 +1,27 @@
+src = 'E:\astego\Images\standard_test_images\bmp\';
+dst = 'E:\astego\Images\standard_test_images\pgm\';
+
+
 close all;
+root = 'E:\astego\Images\Experis\';
+name = '1004.pgm';
+srcPath = [root, name];
+payLoad = single(0.2);
+srcData = single(imread(srcPath));
 
-root = 'E:\astego\Images\tmp\stego\';
-src1 = imread([root,'1.pgm']);
-src2 = imread([root,'195.pgm']);
-    
-sHILL = HILL(srcPath, payLoad);
-sUNWD = S_UNIWARD(uint8(src), payLoad);
-sHUGO = HUGO_like(uint8(src), payLoad);
+sHUGO = HUGO_like(uint8(srcData), payLoad); % 1
+sUNWD = S_UNIWARD(uint8(srcData), payLoad); % 2
+sHILL = HILL(srcPath, payLoad); % 3.pgm
 
-% resid
-DHILL = sHILL - src;
-DUNWD = single(sUNWD) - src;
-DHUGO = single(sHUGO) - src;
+imwrite(uint8(sHUGO), [root,'\stegos\1.pgm'], 'pgm');
+imwrite(uint8(sUNWD), [root,'\stegos\2.pgm'], 'pgm');
+imwrite(uint8(sHILL), [root,'\stegos\3.pgm'], 'pgm');
 
-figure('name','HILL'); imshow(DHILL,[]);
-figure('name','UNWD'); imshow(DUNWD,[]);
-figure('name','HUGO'); imshow(DHUGO,[]);
+[D1,resid1] =  calcuDist(srcPath, [root,'\stegos\1.pgm']);
+[D2,resid2] =  calcuDist(srcPath, [root,'\stegos\2.pgm']);
+[D3,resid3] =  calcuDist(srcPath, [root,'\stegos\3.pgm']);
+
+
+% figure('name','HILL'); imshow(DHILL,[]);
+% figure('name','UNWD'); imshow(DUNWD,[]);
+% figure('name','HUGO'); imshow(DHUGO,[]);

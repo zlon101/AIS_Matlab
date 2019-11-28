@@ -23,6 +23,7 @@ NumParas = 1;  % 参数个数
 NumTotal = single(15);  % 抗体个数
 Iters = 8;  % 迭代次数
 Memory = containers.Map('KeyType','char','ValueType','double');
+save([pwd,'\Memory.mat'],'Memory');clear Memory;
 % output
 bestFits = zeros(Iters, 1);
 bestAbs = cell(Iters, 1);
@@ -55,11 +56,15 @@ imprime(1,vxp,vyp,vzp,x,y,fit,1,1); title('Initial Population');
 for i=1:Iters
 %% 计算适应度
 Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas cell
+save([pwd,'\genes.mat'], 'genes'); clear genes;
+load([pwd,'\Memory.mat']);
 [fits, Memory] = calcuFit(Abs, embedParas, Memory);
+save('Memory','Memory');clear Memory;
+
+load([pwd,'\genes.mat']);
 [fits, sortInd]= sort(fits, 'ascend');  % descend:降序, 要求优秀的排在前面
 Abs= Abs(sortInd, :);
 genes= genes(sortInd, :);
-
 % 消亡
 if(size(genes,1) > NumTotal)
     genes(NumTotal+1:end,:) = []; Abs(NumTotal+1:end,:)=[];
@@ -69,7 +74,7 @@ end
 bestFits(i) = fits(1);
 bestAbs(i) = Abs(1);  % Abs: cell
 meanFits(i) = mean(fits);
-fprintf('\nIter:%d - best fit: %5.3f\n', i,fits(1));
+% fprintf('\nIter:%d - best fit: %5.3f\n', i,fits(1));
 
 if(fits(1) <=bestFits(end))
     countBreak = countBreak+1;
@@ -85,6 +90,7 @@ elseif(countBreak > 0.5*T)
     PNew = PNewMax;
 end
 %% 克隆
+clear tmpGenes;
 [tmpGenes, pcs] = reprod(genes, NumCloned, MultRata);
 % 变异
 M = rand(size(tmpGenes)) <= PMu;  % M=1, 0,1翻转, 否则不变
@@ -94,4 +100,7 @@ tmpGenes(pcs,:) = genes(1:NumCloned, :);
 genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
 % for-end
 end
+% bestFits,bestAbs,meanFits,Memory
+load([pwd,'\Memory.mat']);
+clear genes tmpGenes embedParas;
 end

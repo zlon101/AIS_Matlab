@@ -5,9 +5,9 @@ function embedInRoot(coverRoot, payLoad, stegoRoot, numSample)
 % numSample:    设置样本个数
 % addpath(genpath('./featureFile'));      % 添加文件路径
 t0 = datetime('now');
-coverRoot = 'E:\astego\Images\BOSS_ALL\';
-stegoRoot = 'E:\astego\Images\stegos\HILL\stego_HILL_04\';
-payLoad = 0.4;
+coverRoot = 'E:\astego\Images\Experis\covers\';
+stegoRoot = 'E:\astego\Images\Experis\stegos\UNWD\';
+payLoad = single(0.3);
 numSample = -1;
 
 imgFiles  = dir([coverRoot, '*.pgm']);       % 遍历所有jpg格式文件
@@ -22,7 +22,8 @@ for i = 1:nImages                % 遍历结构体就可以一一处理图片了
     imgName=[coverRoot imgFiles(i).name];
     Names{i}=imgFiles(i).name;
     % 嵌入算法
-    stego = HILL([coverRoot,Names{i}], payLoad);
+    stego = S_UNIWARD(imread([coverRoot,Names{i}]), payLoad);
+    %stego = HILL([coverRoot,Names{i}], payLoad);
     imwrite(uint8(stego), [stegoRoot,Names{i}], 'pgm');
     % J_UNIWARD([coverRoot,Names{i}], [stegRoot,Names{i}], single(payLoad));
     % F5([coverRoot,Names{i}], payLoad, [stegRoot,Names{i}]);

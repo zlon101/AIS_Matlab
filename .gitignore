@@ -1,14 +1,8 @@
 FeatureDatas/
 images/
-m3iregistry/
-registry/
-util/
-win32/
-win64/
 CostDistor/适应度数据/
 ensemble_2.0/训练参数/
-1tool/z_test.m
-embedAlgorithm/ztest.m
+AIS/CSA/*.mat
 *.jpg
 *.bmp
 *.vscode
@@ -18,3 +12,8 @@ embedAlgorithm/ztest.m
 *.exe
 *.pl
 *.pm
+m3iregistry/
+registry/
+util/
+win32/
+win64/

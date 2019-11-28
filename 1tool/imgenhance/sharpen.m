@@ -2,7 +2,8 @@ function [dstImg, HF] = sharpen(srcImg, Amplitude)
 % 图像锐化，丰富纹理
 % Amplitude: 幅度
 %%
-[t, ~] = wiener2(single(srcImg), [3, 3]);
+srcImg = single(imread(srcImg));
+[t, ~] = wiener2(srcImg, [3, 3]);
 HF = srcImg - t;
 T = 2;
 % 限定修改的位置只在纹理丰富的区域

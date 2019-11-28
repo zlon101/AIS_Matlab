@@ -1,9 +1,9 @@
 function z_test()
-srcRoot = 'E:\astego\Images\stegos\stego_HILL_04\';
-dstRoot = 'E:\astego\Images\stegos\HILL_DST\';
+srcRoot = 'E:\astego\Images\standard_test_images\bmp\';
+dstRoot = 'E:\astego\Images\standard_test_images\pgm\';
 numSample = -1;
 
-imgFiles  = dir([srcRoot, '*.pgm']);       % 遍历所有jpg格式文件
+imgFiles  = dir([srcRoot, '*.bmp']);       % 遍历所有jpg格式文件
 Names=cell(length(imgFiles),1);           % 图像名,不含全部路径
 if (~exist('numSample', 'var') || numSample<1)
     numSample=length(imgFiles);
@@ -13,7 +13,8 @@ old='';
 for i = 1:nImages                % 遍历结构体就可以一一处理图片了   
     Names{i}=imgFiles(i).name;
     src = imread([srcRoot,Names{i}]);
-    imwrite(src, [dstRoot,Names{i}], 'pgm');
+    name = split(Names{i},'.');  name = name{1};
+    imwrite(src, [dstRoot,name,'.pgm'], 'pgm');
     % 打印
     msg=sprintf('- count: %3d/%d',i,numSample);
     fprintf([repmat('\b',1,length(old)),msg]);
@@ -22,8 +23,6 @@ for i = 1:nImages                % 遍历结构体就可以一一处理图片了
         break;
     end
 end
-fprintf('\nnumbel of img: %d\n', i);
-fprintf('\n耗时: '); disp(datetime('now')-t0);
 end
 
 %% 频域隐写, nsF5

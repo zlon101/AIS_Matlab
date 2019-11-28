@@ -6,7 +6,6 @@ srcPath = embedParas.srcPath;
 sharpedPath = embedParas.sharpedPath;
 sharpedStegoPath = embedParas.sharpedStegoPath;
 payLoad = embedParas.payLoad;
-srcData = single(imread(srcPath));
 num = length(Abs);
 fits = zeros(num,1);
 old='';
@@ -16,7 +15,7 @@ for i=1:num
         fits(i) = Memory(MemoryKey);
     else
     % »ÒªØ
-    [sharpedData, ~] = sharpen(srcData, Abs{i});
+    [sharpedData, ~] = sharpen(srcPath, Abs{i});
     sharpedData = uint8(sharpedData);
     % “˛–¥
     sharpedStegoData = HUGO_like(sharpedData, payLoad);
@@ -30,9 +29,9 @@ for i=1:num
     fits(i) =  calcuDist(sharpedPath, sharpedStegoPath);
     Memory(MemoryKey) = fits(i);
     % ¥Ú”°
-    msg=sprintf('- count: %3d/%d',i,num);
-    fprintf([repmat('\b',1,length(old)),msg]);
-    old=msg;
+%     msg=sprintf('- count: %3d/%d',i,num);
+%     fprintf([repmat('\b',1,length(old)),msg]);
+%     old=msg;
     % if---end
     end
 % for--end
@@ -51,4 +50,5 @@ fits = eval(f);
 imprime(1,vxp,vyp,vzp,x,y,fits,1,1);
 % -------------------≤‚ ‘Castro----------
 %}
+clear embedParas sharpedData sharpedStegoData;
 end

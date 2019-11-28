@@ -2,20 +2,32 @@ coverRoot = 'E:\astego\Images\BOSS_ALL\';
 % 遍历所有**格式文件
 coverDirs = dir([coverRoot, '*.pgm']); % coverDirs(1)=[];coverDirs(1)=[];
 num = length(coverDirs);
-bestAbs = cell(num,1);
+save('coverDirs','coverDirs');
+bestAbs = cell(num,2);
 old='';
 t0=datetime('now');
 for i = 1:2
+    load coverDirs;
     cPath = [coverRoot, coverDirs(i).name];
+    bestAbs{i,1} = coverDirs(i).name;
+    
+    clear coverDirs bestAbs bestFits TAbs;
     [bestFits,TAbs,~,~] = CSA(cPath);
-    [~,ind] = min(bestFits); 
-    bestAbs(i) = TAbs(ind);
+    
+    TAbs = cell2mat(TAbs);
+    [vmin,~] = min(bestFits); 
+    inds = (bestFits==vmin);
+    Ab = min(TAbs(inds));
+    
+    load('bestAbs.mat'); bestAbs{i,2} = Ab;
     % 打印
     msg=sprintf('- count: %3d/%d',i,num);
     fprintf([repmat('\b',1,length(old)),msg]);
     old=msg;
-    fprintf('\n耗时: '); disp(datetime('now')-t0);
-    a=0;
+    %fprintf('\n耗时: '); disp(datetime('now')-t0);
+    if(mod(i,100)==0)
+        save('bestAbs', 'bestAbs');
+    end
 end
 fprintf('\n耗时: '); disp(datetime('now')-t0);
 save('bestAbs', 'bestAbs');
