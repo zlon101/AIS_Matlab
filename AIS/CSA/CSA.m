@@ -1,14 +1,14 @@
-function [bestFits,bestAbs,meanFits,Memory] = CSA(srcPath)
+function [bestFits,bestAbs,meanFits,Memory] = CSA(srcPath,payLoad)
 % 克隆选择算法, 对图像锐化参数进行优化
 % 
 %%
-Root = 'E:\astego\Images\Experis\';
+payLoad = single(payLoad);
+Root = [pwd,'\Experis\'];
 % name = split(srcPath, '\');  name = name(end);
 name = 'xx.pgm';
 srcStegoPath= [Root,'stegos\', name];
 sharpedPath = [Root,'sharpeds\',name];
 sharpedStegoPath = [Root,'sharpedStegos\',name];
-payLoad = single(0.4);
 embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
     'sharpedStegoPath',sharpedStegoPath,'payLoad',payLoad);
 % srcData = single(imread(srcPath));
@@ -102,4 +102,5 @@ genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
 end
 load([pwd,'\Memory.mat']);
 clearvars -except bestFits bestAbs meanFits Memory;
+clear functions;
 end

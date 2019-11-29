@@ -1,9 +1,12 @@
-coverRoot = 'E:\astego\Images\BOSS_1000\';
+coverRoot = 'E:\astego\Images\BOSS_ALL\';
+payload = 0.4;
+bestAbs = cell(num,2);
+
 % 遍历所有**格式文件
 coverDirs = dir([coverRoot, '*.pgm']); % coverDirs(1)=[];coverDirs(1)=[];
 num = length(coverDirs);
 save('coverDirs','coverDirs');
-bestAbs = cell(num,2);
+
 old='';
 t0=datetime('now');
 for i = 1:num
@@ -13,7 +16,8 @@ for i = 1:num
     save('bestAbs','bestAbs'); clear bestAbs;
     clear coverDirs bestAbs bestFits TAbs;
     
-    [bestFits,TAbs,~,~] = CSA(cPath);clear CSA;
+    [bestFits,TAbs,~,~] = CSA(cPath,payload);
+    clear CSA; clear mex;
     TAbs = cell2mat(TAbs);
     [vmin,~] = min(bestFits); 
     inds = (bestFits==vmin);

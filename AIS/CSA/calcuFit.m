@@ -51,4 +51,5 @@ imprime(1,vxp,vyp,vzp,x,y,fits,1,1);
 % -------------------≤‚ ‘Castro----------
 %}
 clearvars -except fits Memory;
+clear functions; clear mex;
 end
