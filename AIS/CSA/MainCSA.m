@@ -1,4 +1,3 @@
-% local fixed
 coverRoot = 'E:\astego\Images\BOSS_1000\';
 % 遍历所有**格式文件
 coverDirs = dir([coverRoot, '*.pgm']); % coverDirs(1)=[];coverDirs(1)=[];
@@ -7,7 +6,7 @@ save('coverDirs','coverDirs');
 bestAbs = cell(num,2);
 old='';
 t0=datetime('now');
-for i = 1:2
+for i = 1:num
     load coverDirs;
     cPath = [coverRoot, coverDirs(i).name];
     bestAbs{i,1} = coverDirs(i).name;
