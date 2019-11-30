@@ -59,7 +59,7 @@ Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas cell
 save([pwd,'\genes.mat'], 'genes'); clear genes;
 load([pwd,'\Memory.mat']);
 [fits, Memory] = calcuFit(Abs, embedParas, Memory); clear calcuFit;
-save('Memory','Memory');clear Memory;
+save([pwd,'\Memory.mat'],'Memory');clear Memory;
 
 load([pwd,'\genes.mat']);
 [fits, sortInd]= sort(fits, 'ascend');  % descend:降序, 要求优秀的排在前面
@@ -90,7 +90,6 @@ elseif(countBreak > 0.5*T)
     PNew = PNewMax;
 end
 %% 克隆
-clear tmpGenes;
 [tmpGenes, pcs] = reprod(genes, NumCloned, MultRata);
 % 变异
 M = rand(size(tmpGenes)) <= PMu;  % M=1, 0,1翻转, 否则不变
@@ -98,9 +97,10 @@ tmpGenes = tmpGenes - 2 .* (tmpGenes.*M) + M;
 % 维持现有最优Ab
 tmpGenes(pcs,:) = genes(1:NumCloned, :);
 genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
+clear tmpGenes;
 % for-end
 end
 load([pwd,'\Memory.mat']);
 clearvars -except bestFits bestAbs meanFits Memory;
-clear functions;
+% clear functions;
 end

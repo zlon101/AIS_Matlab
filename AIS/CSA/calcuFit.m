@@ -3,9 +3,7 @@ function [fits,Memory]=calcuFit(Abs,embedParas,Memory)
 % 
 %%
 srcPath = embedParas.srcPath;
-sharpedPath = embedParas.sharpedPath;
-sharpedStegoPath = embedParas.sharpedStegoPath;
-payLoad = embedParas.payLoad;
+srcData = single(imread(srcPath));
 num = length(Abs);
 fits = zeros(num,1);
 old='';
@@ -15,23 +13,23 @@ for i=1:num
         fits(i) = Memory(MemoryKey);
     else
     % 锐化
-    [sharpedData, ~] = sharpen(srcPath, Abs{i});
+    [sharpedData, ~] = sharpen(srcData, Abs{i});
     sharpedData = uint8(sharpedData);
     % 隐写
-    sharpedStegoData = HUGO_like(sharpedData, payLoad);
-    imwrite(sharpedData, sharpedPath, 'pgm');
-    imwrite(uint8(sharpedStegoData),sharpedStegoPath, 'pgm');
+    sharpedStegoData = HUGO_like(sharpedData, embedParas.payLoad);
+    % imwrite(sharpedData, sharpedPath, 'pgm');
+    % imwrite(uint8(sharpedStegoData),sharpedStegoPath, 'pgm');
     %% 提取特征   
     %fetuStruct = getFeatures(sharpedPath);  Fc2 = fetuStruct.F;
     %fetuStruct = getFeatures(sharpedStegoPath);  Fs2 = fetuStruct.F;
     %fits(i) = norm(Fs2- Fc2);
     %fits(i) = cacul_psnr(sharpedPath, sharpedStegoPath);
-    fits(i) =  calcuDist(sharpedPath, sharpedStegoPath);
+    fits(i) =  calcuDist(sharpedData, sharpedStegoData);
     Memory(MemoryKey) = fits(i);
     % 打印
-%     msg=sprintf('- count: %3d/%d',i,num);
-%     fprintf([repmat('\b',1,length(old)),msg]);
-%     old=msg;
+    % msg=sprintf('- count: %3d/%d',i,num);
+    % fprintf([repmat('\b',1,length(old)),msg]);
+    % old=msg;
     % if---end
     end
 % for--end

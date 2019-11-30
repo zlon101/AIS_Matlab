@@ -1,16 +1,25 @@
-% close all;
-clear;clc;
+close all;
+% clear;clc;
 Root = 'E:\astego\Images\test\';
-imgData = double(imread([Root, '195.pgm']));
+srcImg = single(imread([Root, 'cover\195.pgm']));
+
+D0= calcuDist(imread([Root, '锐化载体\195.pgm']),...
+    imread([Root, '锐化含密\195.pgm']));
+psnr0= cacul_psnr(imread([Root, 'cover\195.pgm']),...
+    imread([Root, '锐化含密\195.pgm']));
 %% 图像增强
-%方法1
-% Radius=5;
-% dstImg = multiScaleSharpen(src, Radius);
-%方法2
-% [dstImg, highFreq] = sharpen(imgData, 1);
-% figure('name','sharpened');imshow(uint8(dstImg));
-% figure('name','highFreq');imshow(highFreq, []);
-% imwrite(uint8(dstImg), [Root, '195_Sharp.pgm'], 'pgm');
+[sharpImg1,HF1] = sharpen(srcImg, 1);
+[sharpImg2,HF2] =  laplace(srcImg, 1);
+% 隐写
+stegoImg1 = HUGO_like(uint8(sharpImg1), single(0.4));stegoImg1=single(stegoImg1);
+stegoImg2 = HUGO_like(uint8(sharpImg2), single(0.4));stegoImg2=single(stegoImg2);
+% 性能计算
+D1 =  calcuDist(sharpImg1,stegoImg1);
+D2 =  calcuDist(sharpImg2,stegoImg2);
+psnr1 = cacul_psnr(srcImg, stegoImg1);
+psnr2 = cacul_psnr(srcImg, stegoImg2);
+figure('name','HF1'); imshow(round(HF1));
+figure('name','HF2'); imshow(round(HF2));
 %}
 
 %% 批量增强
@@ -25,9 +34,9 @@ total = length(imgDir);
 for i = 1:total                % 遍历结构体就可以一一处理图片了    
     imgPath=[inRoot, imgDir(i).name];
     Names{i} = imgDir(i).name;
-    imgData = double(imread(imgPath));
-    [dstImg, ~] = sharpen(imgData, 1);
-    imwrite(uint8(dstImg), [outRoot,Names{i}], 'pgm');
+    srcImg = double(imread(imgPath));
+    [sharpImg2, ~] = sharpen(srcImg, 1);
+    imwrite(uint8(sharpImg2), [outRoot,Names{i}], 'pgm');
     
     msg=sprintf('- count: %3d/%d',i, total);
     fprintf([repmat('\b',1,length(old)),msg]);

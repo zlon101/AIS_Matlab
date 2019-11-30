@@ -1,23 +1,24 @@
-function [dstImg] = multiScaleSharpen(src, Radius)
-% ¶à³ß¶ÈÍ¼ÏñÏ¸½ÚÔöÇ¿
+function [imgData, D] = multiScaleSharpen(imgData, Am)
+% ï¿½ï¿½ß¶ï¿½Í¼ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½Ç¿
 %% 
-sigma1 = 1.0;
-sigma2 = 2.0;
-sigma3 = 4.0;
+imgData = single(imgData);
+sigma1 = 1.0; sigma2 = 2.0; sigma3 = 4.0;
+Radius = 2; % ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
 H1 = fspecial('gaussian', [Radius,Radius], sigma1);
 H2 = fspecial('gaussian', [Radius*2-1,Radius*2-1], sigma2);
 H3 = fspecial('gaussian', [Radius*4-1,Radius*4-1], sigma3);
-% B1,B2,B3 ·Ö±ðÊÇÈý´ÎÄ£ºýÖ®ºóµÄÍ¼Ïñ
-B1= imfilter(src, H1, 'replicate');
-B2= imfilter(src, H2, 'replicate');
-B3= imfilter(src, H3, 'replicate');
-% D1,D2,D3´ú±íÈý¸ö²ã´ÎµÄÏ¸½Ú
-D1=src-B1;
-D2=B1-B2;
-D3=B2-B3;
+% B1,B2,B3 ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Ö®ï¿½ï¿½ï¿½Í¼ï¿½ï¿½
+B1= imfilter(imgData, H1, 'replicate');
+B2= imfilter(imgData, H2, 'replicate');
+B3= imfilter(imgData, H3, 'replicate');
+% D1,D2,D3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½Ï¸ï¿½ï¿½
+D1=imgData-B1; D2=B1-B2; D3=B2-B3;
 %%
-w1=0.5;
-w2=0.5;
-w3=0.25;
-dstImg=(1 - w1.*sign(D1)).*D1 + w2*D2 + w3*D3 + src;
-end
+w1=0.5; w2=0.5; w3=0.25;
+D = (1 - w1.*sign(D1)).*D1 + w2*D2 + w3*D3;
+D = D .* Am;
+T = 10;
+D(D>T) = T; D(D<-1*T) = -1*T;
+imgData = D + imgData;
+imgData = (imgData);
+imgData(imgData<0) = 0;  imgData(imgData>255) = 255;
