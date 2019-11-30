@@ -1,5 +1,5 @@
-function Key = caculMemoryKey(Ab)
-% Ab:  1*N -- N个参数形式
+function Key = getKey(Ab)
+% Ab:  1*N array -- N个参数形式
 %%
 Key = "";
 for i=1:length(Ab)

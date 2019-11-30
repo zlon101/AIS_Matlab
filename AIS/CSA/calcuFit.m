@@ -7,13 +7,14 @@ num = length(Abs);
 fits = zeros(num,1);
 old='';
 for i=1:num
-    MemoryKey = caculMemoryKey(Abs{i});
-    if(isKey(Memory, MemoryKey))
-        fits(i) = Memory(MemoryKey);
+    K = getKey(Abs(i,:));
+    if(Memory{1,1}==K)
+        vals = Memory{1,2};
+        fits(i) = vals(Memory{1,1}==K);
     else
     % Èñ»¯
     % [sharpedData, ~] = sharpen(srcData, Abs{i});
-    sharpedData =  laplace(srcData, Abs{i});
+    sharpedData =  laplace(srcData, Abs(i,:));
     % ÒþÐ´
     sharpedStegoData = HUGO_like(uint8(sharpedData), embedParas.payLoad);
     % imwrite(sharpedData, sharpedPath, 'pgm');
@@ -24,12 +25,12 @@ for i=1:num
     %fits(i) = norm(Fs2- Fc2);
     %fits(i) = cacul_psnr(sharpedPath, sharpedStegoPath);
     fits(i) =  calcuDist(sharpedData, sharpedStegoData);
-    Memory(MemoryKey) = fits(i);
+    Memory = [Memory];
     % ´òÓ¡
-    % msg=sprintf('- count: %3d/%d',i,num);
-    % fprintf([repmat('\b',1,length(old)),msg]);
-    % old=msg;
-    % if---end
+    msg=sprintf('- count: %3d/%d',i,num);
+    fprintf([repmat('\b',1,length(old)),msg]);
+    old=msg;
+    % if--end
     end
 % for--end
 end

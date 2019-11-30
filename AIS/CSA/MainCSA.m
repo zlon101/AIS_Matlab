@@ -17,7 +17,7 @@ for i = 1:3
     % save('bestAbs','bestAbs'); clear bestAbs;
     % clear coverDirs bestAbs bestFits TAbs;
     
-    [bestFits,TAbs,~,~] = CSA(cPath,payload);
+    [bestFits,TAbs] = CSA(cPath,payload);
 	% clear CSA; clear mex;
     TAbs = cell2mat(TAbs);
     [vmin,~] = min(bestFits); 
