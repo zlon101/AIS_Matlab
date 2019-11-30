@@ -6,6 +6,8 @@ ensemble_2.0/训练参数/
 AIS/CSA/Experis/
 AIS/CSA/*.mat
 **/codegen/
+**/*.prj
+**/*.asv
 *.jpg
 *.bmp
 *.vscode

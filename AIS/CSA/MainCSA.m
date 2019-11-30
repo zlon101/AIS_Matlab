@@ -1,7 +1,7 @@
 function MainCSA(coverRoot)
 fprintf('# start\n');
 coverRoot = 'E:\astego\Images\BOSS_ALL\';
-payload = 0.4;
+payload = single(0.4);
 
 % 遍历所有**格式文件
 coverDirs = dir([coverRoot, '*.pgm']); % coverDirs(1)=[];coverDirs(1)=[];

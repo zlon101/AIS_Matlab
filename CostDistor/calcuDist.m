@@ -1,5 +1,5 @@
 function [distortion,residual] =  calcuDist(coverImg,stegoImg)
-% ï¿½ï¿½ï¿½ï¿½ stego-cover ï¿½ï¿½Ê§ï¿½ï¿½
+% ÒþÐ´Ê§Õæ
 % 
 %%
 % params.gamma = 1;  params.sigma = 1;

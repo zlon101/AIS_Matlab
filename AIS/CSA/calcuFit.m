@@ -2,8 +2,7 @@ function [fits,Memory]=calcuFit(Abs,embedParas,Memory)
 % 计算抗体适应度
 % 
 %%
-srcPath = embedParas.srcPath;
-srcData = single(imread(srcPath));
+srcData = single(imread(embedParas.srcPath));
 num = length(Abs);
 fits = zeros(num,1);
 old='';
@@ -13,10 +12,10 @@ for i=1:num
         fits(i) = Memory(MemoryKey);
     else
     % 锐化
-    [sharpedData, ~] = sharpen(srcData, Abs{i});
-    sharpedData = uint8(sharpedData);
+    % [sharpedData, ~] = sharpen(srcData, Abs{i});
+    sharpedData =  laplace(srcData, Abs{i});
     % 隐写
-    sharpedStegoData = HUGO_like(sharpedData, embedParas.payLoad);
+    sharpedStegoData = HUGO_like(uint8(sharpedData), embedParas.payLoad);
     % imwrite(sharpedData, sharpedPath, 'pgm');
     % imwrite(uint8(sharpedStegoData),sharpedStegoPath, 'pgm');
     %% 提取特征   
@@ -48,6 +47,5 @@ fits = eval(f);
 imprime(1,vxp,vyp,vzp,x,y,fits,1,1);
 % -------------------测试Castro----------
 %}
-clearvars -except fits Memory;
-clear functions; clear mex;
+% clearvars -except fits Memory;
 end

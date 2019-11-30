@@ -6,7 +6,7 @@ payLoad = single(payLoad);
 Root = [pwd,'\Experis\'];
 % name = split(srcPath, '\');  name = name(end);
 name = 'xx.pgm';
-srcStegoPath= [Root,'stegos\', name];
+% srcStegoPath= [Root,'stegos\', name];
 sharpedPath = [Root,'sharpeds\',name];
 sharpedStegoPath = [Root,'sharpedStegos\',name];
 embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
@@ -23,7 +23,7 @@ NumParas = 1;  % 参数个数
 NumTotal = single(15);  % 抗体个数
 Iters = 8;  % 迭代次数
 Memory = containers.Map('KeyType','char','ValueType','double');
-save([pwd,'\Memory.mat'],'Memory');clear Memory;
+% save([pwd,'\Memory.mat'],'Memory');clear Memory;
 % output
 bestFits = zeros(Iters, 1);
 bestAbs = cell(Iters, 1);
@@ -56,12 +56,11 @@ imprime(1,vxp,vyp,vzp,x,y,fit,1,1); title('Initial Population');
 for i=1:Iters
 %% 计算适应度
 Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas cell
-save([pwd,'\genes.mat'], 'genes'); clear genes;
-load([pwd,'\Memory.mat']);
-[fits, Memory] = calcuFit(Abs, embedParas, Memory); clear calcuFit;
-save([pwd,'\Memory.mat'],'Memory');clear Memory;
+% save([pwd,'\genes.mat'], 'genes'); clear genes;
+% load([pwd,'\Memory.mat']);
+[fits, Memory] = calcuFit(Abs, embedParas, Memory);
 
-load([pwd,'\genes.mat']);
+% load([pwd,'\genes.mat']);
 [fits, sortInd]= sort(fits, 'ascend');  % descend:降序, 要求优秀的排在前面
 Abs= Abs(sortInd, :);
 genes= genes(sortInd, :);
@@ -100,7 +99,6 @@ genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
 clear tmpGenes;
 % for-end
 end
-load([pwd,'\Memory.mat']);
+% load([pwd,'\Memory.mat']);
 clearvars -except bestFits bestAbs meanFits Memory;
-% clear functions;
 end
