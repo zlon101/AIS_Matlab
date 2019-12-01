@@ -1,12 +1,12 @@
-function [bestFits,bestAbs,meanFits,Memory] = CSA(srcPath,payLoad)
+function [bestFits,bestAbs,meanFits] = CSA(srcPath,payLoad)
 % 克隆选择算法, 对图像锐化参数进行优化
 % 
 %%
 payLoad = single(payLoad);
-Root = [pwd,'\Experis\'];
+Root = 'E:\astego\Images\Experis\';
 % name = split(srcPath, '\');  name = name(end);
 name = 'xx.pgm';
-srcStegoPath= [Root,'stegos\', name];
+% srcStegoPath= [Root,'stegos\', name];
 sharpedPath = [Root,'sharpeds\',name];
 sharpedStegoPath = [Root,'sharpedStegos\',name];
 embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
@@ -22,11 +22,11 @@ L = ceil(L);  % 编码长度
 NumParas = 1;  % 参数个数
 NumTotal = single(15);  % 抗体个数
 Iters = 8;  % 迭代次数
-Memory = containers.Map('KeyType','char','ValueType','double');
-save([pwd,'\Memory.mat'],'Memory');clear Memory;
+Memory = {}; % key: str val:single
+
 % output
 bestFits = zeros(Iters, 1);
-bestAbs = cell(Iters, 1);
+bestAbs = zeros(Iters, 1,'single');
 meanFits = zeros(Iters,1);
 % 初始化
 MultRata = 0.3;
@@ -55,13 +55,9 @@ imprime(1,vxp,vyp,vzp,x,y,fit,1,1); title('Initial Population');
 %% 开始迭代
 for i=1:Iters
 %% 计算适应度
-Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas cell
-save([pwd,'\genes.mat'], 'genes'); clear genes;
-load([pwd,'\Memory.mat']);
-[fits, Memory] = calcuFit(Abs, embedParas, Memory); clear calcuFit;
-save('Memory','Memory');clear Memory;
+Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas array
+[fits, Memory]= calcuFit(Abs, embedParas,Memory);
 
-load([pwd,'\genes.mat']);
 [fits, sortInd]= sort(fits, 'ascend');  % descend:降序, 要求优秀的排在前面
 Abs= Abs(sortInd, :);
 genes= genes(sortInd, :);
@@ -90,7 +86,6 @@ elseif(countBreak > 0.5*T)
     PNew = PNewMax;
 end
 %% 克隆
-clear tmpGenes;
 [tmpGenes, pcs] = reprod(genes, NumCloned, MultRata);
 % 变异
 M = rand(size(tmpGenes)) <= PMu;  % M=1, 0,1翻转, 否则不变
@@ -98,9 +93,8 @@ tmpGenes = tmpGenes - 2 .* (tmpGenes.*M) + M;
 % 维持现有最优Ab
 tmpGenes(pcs,:) = genes(1:NumCloned, :);
 genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
+clear tmpGenes;
 % for-end
 end
-load([pwd,'\Memory.mat']);
-clearvars -except bestFits bestAbs meanFits Memory;
-clear functions;
+% clearvars -except bestFits bestAbs meanFits Memory;
 end

@@ -2,7 +2,12 @@ FeatureDatas/
 images/
 CostDistor/适应度数据/
 ensemble_2.0/训练参数/
+**/test/
+AIS/CSA/Experis/
 AIS/CSA/*.mat
+**/codegen/
+**/*.prj
+**/*.asv
 *.jpg
 *.bmp
 *.vscode

@@ -1,7 +1,11 @@
-function ps_nr = cacul_psnr(imgName1, imgName2)
-I1 = single(imread(imgName1));
-I2 = single(imread(imgName2));
-[~, ps_nr] = psnr(I1(:,:,1),I2(:,:,1));
+function ps_nr = cacul_psnr(img1, img2)
+if(ischar(img1))
+   img1 = imread(img1);
+   img2 = imread(img2);
+end
+img1 = single(img1); img2 = single(img2);
+[~, ps_nr] = psnr(img1(:,:,1),img2(:,:,1));
+ps_nr = round(ps_nr,3);
 end
 
 %% 
