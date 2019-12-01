@@ -29,7 +29,7 @@ for i = 1:num
     fprintf([repmat('\b',1,length(old)),msg]);
     old=msg;
     %fprintf('\nºÄÊ±: '); disp(datetime('now')-t0);
-    if(mod(i,100)==0)
+    if(mod(i,10)==0)
         save('bestAbs', 'bestAbs');
     end
 end
