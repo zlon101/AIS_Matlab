@@ -15,7 +15,7 @@ for i=1:num
     sharpedData =  laplace(srcData, Abs(i,:));
     % าþะด
     sharpedStegoData = HUGO_like(uint8(sharpedData), embedParas.payLoad);
-    fits(i) =  calcuDist(sharpedData, sharpedStegoData);
+    fits(i) =  calcuDist(sharpedData, single(sharpedStegoData));
     Mem.K{Mem.last}=K; Mem.V(Mem.last)=fits(i); Mem.last=Mem.last+1;
     
     if(Mem.last > length(Mem.V))

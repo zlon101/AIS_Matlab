@@ -2,7 +2,8 @@ function [dstImg,HF] =  laplace(imgData, Am)
 % 拉普拉斯变化, 用于图像锐化
 % imgData: single
 %% 
-% % Modle=[0, 1, 0; 1, -4, 1; 0, 1, 0] .* -1;
+disp('laplace matlab!');
+% Modle=[0, 1, 0; 1, -4, 1; 0, 1, 0] .* -1;
 Modle=[-1, -1, -1; -1, 8, -1; -1, -1, -1];
 HF = filter2(Modle,imgData,'same');
 % HF( abs(HF)<4 ) = 0;
