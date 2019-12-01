@@ -1,21 +1,19 @@
 function [rhoP1,rhoM1] = CostHILL(coverImg)
-%COSTUNIWD 此处显示有关此函数的摘要
-%   此处显示详细说明
+% coverImg: single or char
+% 
 %%
 if(ischar(coverImg))
-   coverImg = imread(coverImg); 
+   coverImg = single(imread(coverImg)); 
 end
-coverImg = single(coverImg);
-% [M,N] = size(coverImg);
 wetCost = 10^8;
 %% 高通H-KB滤波器
 H = single([-1,2,-1; 2,-4,2; -1,2,-1]);
 Y = filter2(H, coverImg, 'same');
 %% 低通L1
-L1 = single(ones(3));
+L1 = ones(3,'single');
 Y = filter2(L1, abs(Y), 'same');
 %% 低通L2
-L2 = single(ones(15));
+L2 = ones(15,'single');
 Cost = filter2(L2, Y.^-1, 'same');
 %% adjust embedding costs
 Cost(Cost > wetCost) = wetCost; % threshold on the costs

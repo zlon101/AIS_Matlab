@@ -3,7 +3,7 @@ function [bestFits,bestAbs,meanFits] = CSA(srcPath,payLoad)
 % 
 %%
 payLoad = single(payLoad);
-Root = 'E:\astego\Images\Experis\';
+Root = 'E:\astego\CSA\';
 % name = split(srcPath, '\');  name = name(end);
 name = 'xx.pgm';
 % srcStegoPath= [Root,'stegos\', name];
@@ -15,19 +15,20 @@ embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
 % srcStegoData = HUGO_like(uint8(srcData), payLoad);
 % imwrite(uint8(srcStegoData),srcStegoPath, 'pgm');
 
+NumParas = 1;  % 参数个数
 Precision = 0.001;
 Vmin = 0;  Vmax = 1.4;
 L = log2( ((Vmax-Vmin)/Precision) + 1);
 L = ceil(L);  % 编码长度
-NumParas = 1;  % 参数个数
-NumTotal = single(15);  % 抗体个数
+NumTotal = 15;  % 抗体个数
 Iters = 8;  % 迭代次数
-Memory = {}; % key: str val:single
+Memory.K = {};  Memory.V = zeros(20,1,'single');
+Memory.last=uint8(1);
 
 % output
-bestFits = zeros(Iters, 1);
-bestAbs = zeros(Iters, 1,'single');
-meanFits = zeros(Iters,1);
+bestAbs = zeros(Iters, NumParas,'single');
+bestFits = zeros(Iters, 1,'single');
+meanFits = zeros(Iters,1,'single');
 % 初始化
 MultRata = 0.3;
 PClone = 0.3;  NumCloned = round(NumTotal * PClone);
@@ -36,7 +37,7 @@ PNewMin = 0.1; PNewMax = 0.3; PNew= NumTotal*PNewMin;
 T = 6;
 genes = initAb(NumTotal, NumParas*L);
 % 0值编码
-genes(1,:) = zeros(1,NumParas*L);
+genes(1,:) = [1 0 0 0 0 0 1 1 1 0 0];
 % ------------------测试Castro---------------------------------
 %{
 f = '1 * x .* sin(4 * pi .* x) - 1 * y.* sin(4 * pi .* y + pi) + 1';
@@ -55,45 +56,45 @@ imprime(1,vxp,vyp,vzp,x,y,fit,1,1); title('Initial Population');
 %% 开始迭代
 for i=1:Iters
 %% 计算适应度
-Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas array
-[fits, Memory]= calcuFit(Abs, embedParas,Memory);
+  Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas array
+  [fits, Memory]= calcuFit(Abs, embedParas,Memory);
 
-[fits, sortInd]= sort(fits, 'ascend');  % descend:降序, 要求优秀的排在前面
-Abs= Abs(sortInd, :);
-genes= genes(sortInd, :);
-% 消亡
-if(size(genes,1) > NumTotal)
+  [fits, sortInd]= sort(fits, 'ascend');  % descend:降序, 要求优秀的排在前面
+  Abs= Abs(sortInd, :);
+  genes= genes(sortInd, :);
+  % 消亡
+  if(size(genes,1) > NumTotal)
     genes(NumTotal+1:end,:) = []; Abs(NumTotal+1:end,:)=[];
     fits(NumTotal+1:end,:)=[];
-end
-% 日志
-bestFits(i) = fits(1);
-bestAbs(i) = Abs(1);  % Abs: cell
-meanFits(i) = mean(fits);
-% fprintf('\nIter:%d - best fit: %5.3f\n', i,fits(1));
+  end
+  % 日志
+  bestFits(i) = fits(1);
+  bestAbs(i) = Abs(1);  % Abs: cell
+  meanFits(i) = mean(fits);
+  %fprintf('\nIter:%d - best fit: %5.3f\n', i,fits(1));
 
-if(fits(1) <=bestFits(end))
+  if(fits(1) <=bestFits(end))
     countBreak = countBreak+1;
-else
+  else
     countBreak = 1;
     PMu = PMuMin;
     PNew = PNewMin;
-end
-if(countBreak > T)
+  end
+  if(countBreak > T)
     break;
-elseif(countBreak > 0.5*T)
+  elseif(countBreak > 0.5*T)
     PMu = PMuMax;
     PNew = PNewMax;
-end
-%% 克隆
-[tmpGenes, pcs] = reprod(genes, NumCloned, MultRata);
-% 变异
-M = rand(size(tmpGenes)) <= PMu;  % M=1, 0,1翻转, 否则不变
-tmpGenes = tmpGenes - 2 .* (tmpGenes.*M) + M;
-% 维持现有最优Ab
-tmpGenes(pcs,:) = genes(1:NumCloned, :);
-genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
-clear tmpGenes;
+  end
+  %% 克隆
+  [tmpGenes, pcs] = reprod(genes, NumCloned, MultRata);
+  % 变异
+  M = rand(size(tmpGenes)) <= PMu;  % M=1, 0,1翻转, 否则不变
+  tmpGenes = tmpGenes - 2 .* (tmpGenes.*M) + M;
+  % 维持现有最优Ab
+  tmpGenes(pcs,:) = genes(1:NumCloned, :);
+  genes = [tmpGenes; initAb(NumTotal*PNew, NumParas*L)];
+  clear tmpGenes;
 % for-end
 end
 % clearvars -except bestFits bestAbs meanFits Memory;
