@@ -7,21 +7,20 @@ saveRoot = 'E:\astego\CSA\';
 % 遍历所有**格式文件
 coverDirs = dir([coverRoot, '*.pgm']);
 num = length(coverDirs);
+if(exist([saveRoot,'bestAbs.mat'],'file'))
+  load([saveRoot,'bestAbs.mat']);
+else
+  bestAbs = cell(num,2);
+end
+if(exist('startInd','var'))
+  startInd=int8(str2double(startInd));
+else
+  startInd = getStart(bestAbs);
+end
 if(exist('endInd','var'))
   endInd=int8(str2double(endInd));
 else 
   endInd=num;
-end
-if(exist([saveRoot,'bestAbs.mat'],'file'))
-  load([saveRoot,'bestAbs.mat']);
-  startInd = getStart(bestAbs);
-else
-  bestAbs = cell(num,2);
-  if(exist('startInd','var'))
-    startInd=int8(str2double(startInd));
-  else
-    startInd=1;
-  end
 end
 clear getStart;
 fprintf('# start\n#count:%d - %d\n',startInd,endInd);
@@ -29,6 +28,9 @@ fprintf('# start\n#count:%d - %d\n',startInd,endInd);
 %% 
 old=''; % t0=datetime('now');
 for i = startInd:endInd
+  if(~isempty(bestAbs{i,1}))
+    continue;
+  end
   cPath = [coverRoot, coverDirs(i).name];
   save([saveRoot,'coverDirs.mat'],'coverDirs'); clear coverDirs;
   save([saveRoot,'bestAbs.mat'],'bestAbs'); clear bestAbs;

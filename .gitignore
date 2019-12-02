@@ -7,7 +7,6 @@ ais/csa/Experis/
 **/codegen/
 
 ais/csa/*.mat
-zExperi/*.mat
 **/*.prj
 **/*.asv
 
