@@ -16,7 +16,7 @@ ais/csa/*.mat
 *.bat
 *.xml
 *.xsd
-*.exe
+matlab.exe
 *.pl
 *.pm
 m3iregistry/
