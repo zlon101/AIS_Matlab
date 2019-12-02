@@ -17,6 +17,8 @@ M文件编译为EXE:
   根据链接下载 mingw.mlpkginstall文件,并在MATLAB中打开,安装MinGW-w64,
   根据链接下载winsdksetup.exe 或 ios文件,然后安装SDK
   
+  安装Matlab Runtime: D:\MATLAB2017B\toolbox\compiler\deploy\win64\MCRInstaller.exe
+  
 # 打包部署
   for_redistribution: 安装包
   for_testing: 与MCC命令编译结果相同
