@@ -1,8 +1,10 @@
-function MainCSA(coverRoot, startInd, endInd)
-% startInd='1';endInd='10';
+function MainCSA(coverRoot, startInd, endInd,saveRoot)
+% startInd='1000'; %endInd='10';
 % coverRoot = 'E:\astego\Images\BOSS_ALL\';
 payload = single(0.4);
-saveRoot = 'E:\astego\CSA\';
+if(~exist('saveRoot','var'))
+  saveRoot = 'E:\astego\CSA\';
+end
 
 % 遍历所有**格式文件
 coverDirs = dir([coverRoot, '*.pgm']);
@@ -15,12 +17,12 @@ end
 if(exist('startInd','var'))
   startInd=int8(str2double(startInd));
 else
-  startInd = getStart(bestAbs);
+  startInd = int8(getStart(bestAbs));
 end
 if(exist('endInd','var'))
   endInd=int8(str2double(endInd));
 else 
-  endInd=num;
+  endInd=int8(num);
 end
 clear getStart;
 fprintf('# start\n#count:%d - %d\n',startInd,endInd);
