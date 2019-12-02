@@ -4,10 +4,13 @@ costdistor/适应度数据/
 ensemble_2.0/训练参数/
 **/test/
 ais/csa/Experis/
-ais/csa/*.mat
 **/codegen/
+
+ais/csa/*.mat
+zExperi/*.mat
 **/*.prj
 **/*.asv
+
 *.jpg
 *.bmp
 *.vscode
