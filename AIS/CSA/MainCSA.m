@@ -15,14 +15,14 @@ else
   bestAbs = cell(num,2);
 end
 if(exist('startInd','var'))
-  startInd=int8(str2double(startInd));
+  startInd = single(str2double(startInd));
 else
-  startInd = int8(getStart(bestAbs));
+  startInd = single(getStart(bestAbs));
 end
 if(exist('endInd','var'))
-  endInd=int8(str2double(endInd));
+  endInd=single(str2double(endInd));
 else 
-  endInd=int8(num);
+  endInd=single(num);
 end
 clear getStart;
 fprintf('# start\n#count:%d - %d\n',startInd,endInd);
@@ -47,7 +47,7 @@ for i = startInd:endInd
   bestAbs{i,2} = Ab;
    
   if(mod(i,10)==0)
-    save([saveRoot,'bestAbs.mat'], 'bestAbs');
+    %save([saveRoot,'bestAbs.mat'], 'bestAbs');
     clear functions mex global;
   end
   % ¥Ú”°

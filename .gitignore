@@ -5,11 +5,11 @@ ensemble_2.0/训练参数/
 **/test/
 ais/csa/Experis/
 **/codegen/
-
+zExperi/*.mat
 ais/csa/*.mat
+
 **/*.prj
 **/*.asv
-
 *.jpg
 *.bmp
 *.vscode
