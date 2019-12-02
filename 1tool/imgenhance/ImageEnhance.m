@@ -1,25 +1,31 @@
-close all;
+close all;clc;
 % clear;clc;
 Root = 'E:\astego\Images\test\';
 srcImg = single(imread([Root, 'cover\195.pgm']));
 
-D0= calcuDist(imread([Root, '锐化载体\195.pgm']),...
-    imread([Root, '锐化含密\195.pgm']));
-psnr0= cacul_psnr(imread([Root, 'cover\195.pgm']),...
-    imread([Root, '锐化含密\195.pgm']));
+% D0= calcuDist(imread([Root, '锐化载体\195.pgm']),...
+%     imread([Root, '锐化含密\195.pgm']));
+% psnr0= cacul_psnr(imread([Root, 'cover\195.pgm']),...
+%     imread([Root, '锐化含密\195.pgm']));
 %% 图像增强
-[sharpImg1,HF1] = sharpen(srcImg, 1);
-[sharpImg2,HF2] =  laplace(srcImg, 1);
+% [sharpImg1,HF1] = sharpen(srcImg, 1);
+[sharpImg0,HF0] =  imgLaplace(srcImg, 0);
+[sharpImg1,HF1] =  imgLaplace(srcImg, -1);
+[sharpImg2,HF2] =  imgLaplace(srcImg, 1.5);
 % 隐写
+stegoImg0 = HUGO_like(uint8(sharpImg0), single(0.4));stegoImg0=single(stegoImg0);
 stegoImg1 = HUGO_like(uint8(sharpImg1), single(0.4));stegoImg1=single(stegoImg1);
 stegoImg2 = HUGO_like(uint8(sharpImg2), single(0.4));stegoImg2=single(stegoImg2);
 % 性能计算
+D0 =  calcuDist(sharpImg0,stegoImg0);
 D1 =  calcuDist(sharpImg1,stegoImg1);
 D2 =  calcuDist(sharpImg2,stegoImg2);
+psnr0 = cacul_psnr(srcImg, stegoImg0);
 psnr1 = cacul_psnr(srcImg, stegoImg1);
 psnr2 = cacul_psnr(srcImg, stegoImg2);
-figure('name','HF1'); imshow(round(HF1));
-figure('name','HF2'); imshow(round(HF2));
+% figure('name','HF0'); imshow(round(HF0));
+% figure('name','HF-1'); imshow(round(HF1));
+% figure('name','HF2'); imshow(round(HF2));
 %}
 
 %% 批量增强

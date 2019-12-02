@@ -12,7 +12,7 @@ for i=1:num
   else
     % Èñ»¯
     % [sharpedData, ~] = sharpen(srcData, Abs{i});
-    sharpedData =  laplace(srcData, Abs(i,:));
+    sharpedData =  imgLaplace(srcData, Abs(i,:));
     % ÒþÐ´
     sharpedStegoData = HUGO_like(uint8(sharpedData), embedParas.payLoad);
     fits(i) =  calcuDist(sharpedData, single(sharpedStegoData));

@@ -1,15 +1,15 @@
-function [dstImg,HF] =  laplace(imgData, Am)
+function [dstImg,HF] =  imgLaplace(imgData, Am)
 % 拉普拉斯变化, 用于图像锐化
 % imgData: single
 %% 
-disp('laplace matlab!');
+% disp('laplace matlab!');
 % Modle=[0, 1, 0; 1, -4, 1; 0, 1, 0] .* -1;
 Modle=[-1, -1, -1; -1, 8, -1; -1, -1, -1];
 HF = filter2(Modle,imgData,'same');
 % HF( abs(HF)<4 ) = 0;
 HF = single(0.05*Am .* HF);
 % T = 10; HF(HF>T) = T; HF(HF<-1*T) = -1*T;
-dstImg = (imgData + HF);
+dstImg = round(imgData + HF);
 dstImg(dstImg<0) = 0;  dstImg(dstImg>255) = 255;
 end
 
