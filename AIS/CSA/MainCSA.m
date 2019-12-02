@@ -1,18 +1,34 @@
-function MainCSA(coverRoot)
-fprintf('# start\n');
+function MainCSA(coverRoot, startInd, endInd)
+% startInd='1';endInd='10';
 % coverRoot = 'E:\astego\Images\BOSS_ALL\';
 payload = single(0.4);
 saveRoot = 'E:\astego\CSA\';
 
 % 遍历所有**格式文件
-coverDirs = dir([coverRoot, '*.pgm']); % coverDirs(1)=[];coverDirs(1)=[];
+coverDirs = dir([coverRoot, '*.pgm']);
 num = length(coverDirs);
-bestAbs = cell(num,2);
-% load([saveRoot,'bestAbs.mat']); start = getStart(bestAbs);
-start=1;
+if(exist('endInd','var'))
+  endInd=int8(str2double(endInd));
+else 
+  endInd=num;
+end
+if(exist([saveRoot,'bestAbs.mat'],'file'))
+  load([saveRoot,'bestAbs.mat']);
+  startInd = getStart(bestAbs);
+else
+  bestAbs = cell(num,2);
+  if(exist('startInd','var'))
+    startInd=int8(str2double(startInd));
+  else
+    startInd=1;
+  end
+end
+clear getStart;
+fprintf('# start\n#count:%d - %d\n',startInd,endInd);
 
+%% 
 old=''; % t0=datetime('now');
-for i = start:num
+for i = startInd:endInd
   cPath = [coverRoot, coverDirs(i).name];
   save([saveRoot,'coverDirs.mat'],'coverDirs'); clear coverDirs;
   save([saveRoot,'bestAbs.mat'],'bestAbs'); clear bestAbs;
@@ -28,7 +44,7 @@ for i = start:num
    
   if(mod(i,10)==0)
     save([saveRoot,'bestAbs.mat'], 'bestAbs');
-    clear functions;
+    clear functions mex global;
   end
   % 打印
   msg=sprintf('- count: %3d/%d',i,num);

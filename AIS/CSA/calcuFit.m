@@ -37,10 +37,6 @@ end
 % clearvars -except fits Memory;
 end
 
-function ind = getIndex(k,Keys)
-% 搜索Memory 中指定K的index
-[~, ind] = ismember(k,Keys);
-end
 %  -------------------测试Castro----------
 %{
 f = '1 * x .* sin(4 * pi .* x) - 1 * y.* sin(4 * pi .* y + pi) + 1';
