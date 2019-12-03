@@ -6,7 +6,7 @@ ensemble_2.0/训练参数/
 ais/csa/Experis/
 **/codegen/
 zExperi/*.mat
-ais/csa/*.mat
+ais/**/*.mat
 
 **/*.prj
 **/*.asv
