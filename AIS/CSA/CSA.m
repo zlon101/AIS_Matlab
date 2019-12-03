@@ -97,5 +97,5 @@ for i=1:Iters
   clear tmpGenes;
 % for-end
 end
-% clearvars -except bestFits bestAbs meanFits Memory;
+clearvars -except bestFits bestAbs meanFits;
 end

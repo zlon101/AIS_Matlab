@@ -14,8 +14,8 @@ for i=1:num
     % [sharpedData, ~] = sharpen(srcData, Abs{i});
     sharpedData =  imgLaplace(srcData, Abs(i,:));
     % “˛–¥
-    sharpedStegoData = HUGO_like(uint8(sharpedData), embedParas.payLoad);
-    fits(i) =  calcuDist(sharpedData, single(sharpedStegoData));
+    % sharpedStegoData = HUGO_like(uint8(sharpedData), embedParas.payLoad);
+    fits(i) =  calcuDist(sharpedData, single(HUGO_like(uint8(sharpedData), embedParas.payLoad)));
     Mem.K{Mem.last}=K; Mem.V(Mem.last)=fits(i); Mem.last=Mem.last+1;
     
     if(Mem.last > length(Mem.V))
@@ -34,7 +34,8 @@ for i=1:num
   end
 % for-end  
 end
-% clearvars -except fits Memory;
+% clear imgLaplace calcuDist;
+clearvars -except fits Mem;
 end
 
 %  -------------------≤‚ ‘Castro----------

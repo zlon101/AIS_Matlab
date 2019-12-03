@@ -50,4 +50,5 @@ disp(MEXend);
 % figure;
 % subplot(1, 2, 1); imshow(cover); title('cover');
 % subplot(1, 2, 2); imshow((double(stego) - double(cover) + 1)/2); title('embedding changes: +1 = white, -1 = black');
-% fprintf('\n\nImage embedded in %.2f seconds, change rate: %.4f, distortion per pixel: %.6f\n',MEXend, sum(cover(:)~=stego(:))/numel(cover), distortion/numel(cover));
+fprintf('\n\nImage embedded in %.2f seconds, change rate: %.4f, distortion per pixel: %.6f\n',...
+  MEXend, sum(cover(:)~=stego(:))/numel(cover), distortion/numel(cover));

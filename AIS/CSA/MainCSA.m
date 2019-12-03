@@ -1,5 +1,5 @@
 function MainCSA(coverRoot, startInd, endInd,saveRoot)
-% startInd='1000'; %endInd='10';
+% startInd='10'; endInd='12';
 % coverRoot = 'E:\astego\Images\BOSS_ALL\';
 payload = single(0.4);
 if(~exist('saveRoot','var'))
@@ -14,7 +14,7 @@ if(exist([saveRoot,'bestAbs.mat'],'file'))
 else
   bestAbs = cell(num,2);
 end
-if(exist('startInd','var'))
+if(exist('startInd','var') && str2double(startInd)>0)
   startInd = single(str2double(startInd));
 else
   startInd = single(getStart(bestAbs));
