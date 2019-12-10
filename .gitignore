@@ -24,3 +24,6 @@ registry/
 util/
 win32/
 win64/
+
+!schtaskRun.bat
+!restartcsa.bat

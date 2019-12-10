@@ -6,10 +6,11 @@ function [dstImg,HF] =  imgLaplace(imgData, Am)
 % Modle=[0, 1, 0; 1, -4, 1; 0, 1, 0] .* -1;
 Modle=[-1, -1, -1; -1, 8, -1; -1, -1, -1];
 HF = filter2(Modle,imgData,'same');
+HF(1,:)=0; HF(end,:)=0; HF(:,1)=0; HF(:,end)=0;
 % HF( abs(HF)<4 ) = 0;
-HF = single(0.05*Am .* HF);
+HF = round(0.05*Am .* HF);
 % T = 10; HF(HF>T) = T; HF(HF<-1*T) = -1*T;
-dstImg = round(imgData + HF);
+dstImg = imgData + HF;
 dstImg(dstImg<0) = 0;  dstImg(dstImg>255) = 255;
 end
 

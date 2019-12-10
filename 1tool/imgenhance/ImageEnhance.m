@@ -1,47 +1,57 @@
 close all;clc;
-% clear;clc;
-Root = 'E:\astego\Images\test\';
-srcImg = single(imread([Root, 'cover\195.pgm']));
+%{
+% coverRoot='E:\astego\Images\covers\锐化G1后载体_直接锐化版\';
+% stegoRoot='E:\astego\Images\stegos\HUGO\锐化G1_HUGO_04_1万\';
+names={'195.pgm';'103.pgm';'1004.pgm'};
+bossRoot='E:\astego\Images\BOSS_ALL\';
+% D1=zeros(length(names),1);
+% psnr1=zeros(length(names),1);
+% for i=1:length(names)
+%   D1(i)= calcuDist(single(imread([coverRoot,names{i}])),...
+%       single(imread([stegoRoot,names{i}])));
+%   psnr1(i)= cacul_psnr(single(imread([bossRoot,names{i}])),...
+%       single(imread([stegoRoot,names{i}])));
+% end
 
-D0= calcuDist(single(imread([Root, '锐化载体\195.pgm'])),...
-    single(imread([Root, '锐化含密\195.pgm'])));
-% psnr0= cacul_psnr(imread([Root, 'cover\195.pgm']),...
-%     imread([Root, '锐化含密\195.pgm']));
-%% 图像增强
-[sharpImg1,HF1] = sharpen(srcImg, 1);
-[sharpImg2,HF2] = imgLaplace(srcImg, 1);
-
-% 隐写
-stegoImg1 = HUGO_like(uint8(sharpImg1), single(0.4));stegoImg1=single(stegoImg1);
-stegoImg2 = HUGO_like(uint8(sharpImg2), single(0.4));stegoImg2=single(stegoImg2);
-% 性能计算
-D1 =  calcuDist(sharpImg1,stegoImg1);
-D2 =  calcuDist(sharpImg2,stegoImg2);
-psnr1 = cacul_psnr(srcImg, stegoImg1);
-psnr2 = cacul_psnr(srcImg, stegoImg2);
-% figure('name','HF0'); imshow(round(HF0));
-% figure('name','HF-1'); imshow(round(HF1));
-% figure('name','HF2'); imshow(round(HF2));
+%% ------------------------------------------------------------------
+Root = 'E:\astego\Images\standard_test_images\bmp\';
+dirs = dir([Root,'*.bmp']);
+names = cell(length(dirs),1);
+for i=1:length(dirs)
+  names{i} = dirs(i).name;
+end
+D1 = zeros(length(names),1);
+psnr1 = zeros(length(names),1);
+for i=1:length(names)
+coverImg = single( imread([Root,names{i}]) );
+% 图像增强
+% [immuImg2,HF] = imgLaplace(coverImg, 1.5);
+[immuImg1,HF] = sharpen(coverImg, 1.1);
+stegoImg1 = HUGO_like(uint8(immuImg1), single(0.4));stegoImg1=single(stegoImg1);
+D1(i) =  calcuDist(immuImg1,stegoImg1);
+psnr1(i) = cacul_psnr(coverImg, stegoImg1);
+end
 %}
+
 
 %% 批量增强
 inRoot = 'E:\astego\Images\BOSS_ALL\';
-outRoot = 'E:\astego\Images\covers\锐化G3载体_Am1\';
-imgDir  = dir([inRoot '*.*']);    % 遍历所有**格式文件
-imgDir(1)=[];imgDir(1)=[];
-Names = cell(length(imgDir),1);    % 图像名,不含全部路径
-
+outRoot= 'E:\astego\Images\covers\锐化T2Cover\';
+dirs = dir([inRoot, '*.pgm']); % imgDir(1)=[];imgDir(1)=[];
+names = cell(length(dirs),1);
 old='';
-total = length(imgDir);
-for i = 1:total                % 遍历结构体就可以一一处理图片了    
-    imgPath=[inRoot, imgDir(i).name];
-    Names{i} = imgDir(i).name;
-    srcImg = double(imread(imgPath));
-    [sharpImg2, ~] = sharpen(srcImg, 1);
-    imwrite(uint8(sharpImg2), [outRoot,Names{i}], 'pgm');
-    
-    msg=sprintf('- count: %3d/%d',i, total);
-    fprintf([repmat('\b',1,length(old)),msg]);
-    old=msg;
+total = length(dirs);
+for i = 1:total
+  names{i} = dirs(i).name;
+  path=[inRoot, dirs(i).name];
+  coverImg = single(imread(path));
+
+  % sharpedData =  imgLaplace(coverImg, bestAbs{i,2});
+  sharpedImg = sharpen(coverImg, 1.1);
+  imwrite(uint8(sharpedImg), [outRoot,names{i}], 'pgm');
+
+  msg=sprintf('- count: %3d/%d',i, total);
+  fprintf([repmat('\b',1,length(old)),msg]);
+  old=msg;
 end
 %}

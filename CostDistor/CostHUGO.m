@@ -1,4 +1,4 @@
-function [rhoP1,rhoM1] = CostHUGO(coverPath, params)
+function [rhoP1,rhoM1] = CostHUGO(coverImg, params)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
@@ -6,7 +6,7 @@ if ~exist('params', 'var')
     params.gamma = 1;
     params.sigma = 1;
 end
-cover = double(imread(coverPath));
+cover = single(coverImg);
 wetCost = 10^8;
 responseP1 = [0; 0; -1; +1; 0; 0];
 
