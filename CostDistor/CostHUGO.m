@@ -2,6 +2,7 @@ function [rhoP1,rhoM1] = CostHUGO(coverImg, coefs)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
+% fprintf('\n---CostHUGO Matlab!----\n');
 cH=coefs(1); cV=coefs(2);
 params.gamma = 1;
 params.sigma = 1;
