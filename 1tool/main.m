@@ -1,8 +1,7 @@
 % HUGOÒþÐ´, Í¼ÏñÔöÇ¿
 %%
-close all;
 Root = 'E:\astego\Images\test\';
-name = 'house.bmp';
+name = '195.pgm';
 payLoad = single(0.4);
 srcPath = [Root, name];
 srcStegoPath = [Root,'stegos\',name];
@@ -10,8 +9,9 @@ srcData = single(imread(srcPath));
 % srcStegoData = HUGO_like(uint8(srcData), payLoad);
 % imwrite(uint8(srcStegoData),srcStegoPath, 'pgm');
 % Èñ»¯
-Am = 1.479;
-[sharpedData, HF] = sharpen(srcData, Am);
+Am = 1;
+% [sharpedData, HF] = sharpen(srcData, Am);
+[dstImg,HF] =  imgLaplace(srcData, Am);
 % D= sharpedData-srcData; D(D==0)=NaN; figure;histogram(D);
 % ÒþÐ´
 sharpedStegoData = HUGO_like(uint8(sharpedData), payLoad);

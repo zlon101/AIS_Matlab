@@ -25,5 +25,5 @@ util/
 win32/
 win64/
 
-!restartcsa.bat
 !schtaskRun.bat
+!restartcsa.bat

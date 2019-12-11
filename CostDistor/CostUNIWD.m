@@ -1,8 +1,11 @@
-function [rhoP1,rhoM1] = CostUNIWD(coverPath)
+function [rhoP1,rhoM1] = CostUNIWD(coverImg)
 %COSTUNIWD 此处显示有关此函数的摘要
 %   此处显示详细说明
 %%
-cover = double(imread(coverPath));
+if(ischar(coverImg))
+   coverImg = imread(coverImg); 
+end
+cover = single(coverImg);
 [k,l] = size(cover);
 sgm = 1;
 wetCost = 10^8;
