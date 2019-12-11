@@ -1,30 +1,9 @@
-function [rhoP1,rhoM1] = CostHUGO(coverImg, coefs)
-% HUGO 代价函数
-% 返回+1 -1 的代价
-%% 
-cH=coefs(1); cV=coefs(2);
+function [rhoP1,rhoM1]=fn(cover, C_Rez_H,C_Rez_V,C_Rez_Diag, C_Rez_MDiag,...
+  S_Rez_H, S_Rez_V,S_Rez_Diag,S_Rez_MDiag,coefs)
 params.gamma = 1;
 params.sigma = 1;
-cover = single(coverImg);
-wetCost = 10^8;
+cH=coefs(1); cV=coefs(2);
 responseP1 = [0; 0; -1; +1; 0; 0];
-
-% create mirror padded cover image
-padSize = double(3);
-coverPadded = padarray(cover, [padSize,padSize], 'symmetric');
-% create residuals
-C_Rez_H = coverPadded(:, 1:end-1) - coverPadded(:, 2:end);
-C_Rez_V = coverPadded(1:end-1, :) - coverPadded(2:end, :);
-C_Rez_Diag = coverPadded(1:end-1, 1:end-1) - coverPadded(2:end, 2:end);
-C_Rez_MDiag = coverPadded(1:end-1, 2:end) - coverPadded(2:end, 1:end-1);
-
-stegoPadded = coverPadded;
-% create residuals
-S_Rez_H = stegoPadded(:, 1:end-1) - stegoPadded(:, 2:end);
-S_Rez_V = stegoPadded(1:end-1, :) - stegoPadded(2:end, :);
-S_Rez_Diag = stegoPadded(1:end-1, 1:end-1) - stegoPadded(2:end, 2:end);
-S_Rez_MDiag = stegoPadded(1:end-1, 2:end) - stegoPadded(2:end, 1:end-1);
-        
 rhoM1 = zeros(size(cover));  % declare cost of -1 change           
 rhoP1 = zeros(size(cover));  % declare cost of +1 change
 for row=1:size(cover, 1)
@@ -63,10 +42,3 @@ for row=1:size(cover, 1)
     rhoP1(row, col) = D_P1;            
   end
 end
-% clear S_Rez_H S_Rez_V S_Rez_Diag S_Rez_MDiag C_Rez_H C_Rez_V C_Rez_Diag;
-
-% truncation of the costs
-rhoM1(rhoM1>wetCost) = wetCost;
-rhoP1(rhoP1>wetCost) = wetCost;
-rhoP1(cover == 255) = wetCost;
-rhoM1(cover == 0) = wetCost;
