@@ -2,6 +2,7 @@ function [rhoP1,rhoM1] = CostHUGO(coverImg, coefs)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
+% fprintf('\n---CostHUGO Matlab!----\n');
 cH=coefs(1); cV=coefs(2);
 params.gamma = 1;
 params.sigma = 1;
@@ -25,8 +26,8 @@ S_Rez_V = stegoPadded(1:end-1, :) - stegoPadded(2:end, :);
 S_Rez_Diag = stegoPadded(1:end-1, 1:end-1) - stegoPadded(2:end, 2:end);
 S_Rez_MDiag = stegoPadded(1:end-1, 2:end) - stegoPadded(2:end, 1:end-1);
         
-rhoM1 = zeros(size(cover));  % declare cost of -1 change           
-rhoP1 = zeros(size(cover));  % declare cost of +1 change
+rhoM1 = zeros(size(cover),'single');  % declare cost of -1 change           
+rhoP1 = zeros(size(cover),'single');  % declare cost of +1 change
 for row=1:size(cover, 1)
   for col=1:size(cover, 2)
     D_P1 = 0;

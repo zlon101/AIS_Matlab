@@ -1,6 +1,5 @@
 function [bestFits,bestAbs,meanFits] = CSA(srcPath,payLoad)
 % 克隆选择算法, 对图像锐化参数进行优化
-% 
 %%
 payLoad = single(payLoad);
 Root = 'E:\astego\CSA\';
@@ -15,9 +14,9 @@ embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
 % srcStegoData = HUGO_like(uint8(srcData), payLoad);
 % imwrite(uint8(srcStegoData),srcStegoPath, 'pgm');
 
-NumParas = 1;  % 参数个数
-Precision = 0.001;
-Vmin = 0;  Vmax = 1.4;
+NumParas = 2;  % 参数个数
+Precision = 0.01;
+Vmin = 1;  Vmax = 1.5;
 L = log2( ((Vmax-Vmin)/Precision) + 1);
 L = ceil(L);  % 编码长度
 NumTotal = 15;  % 抗体个数
@@ -36,8 +35,8 @@ PMuMin = 0.02;  PMuMax = 0.1;  PMu = PMuMin;
 PNewMin = 0.1; PNewMax = 0.3; PNew= NumTotal*PNewMin;
 T = 6;
 genes = initAb(NumTotal, NumParas*L);
-% 0值编码
-genes(1,:) = [1 0 0 0 0 0 1 1 1 0 0];
+% 指定值编码
+% genes(1,:) = [1 0 0 0 0 0 1 1 1 0 0];
 % ------------------测试Castro---------------------------------
 %{
 f = '1 * x .* sin(4 * pi .* x) - 1 * y.* sin(4 * pi .* y + pi) + 1';
@@ -57,7 +56,8 @@ imprime(1,vxp,vyp,vzp,x,y,fit,1,1); title('Initial Population');
 for i=1:Iters
 %% 计算适应度
   Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas array
-  [fits, Memory]= calcuFit(Abs, embedParas,Memory);
+  [fits, Memory]= fitOfAlg2(Abs, embedParas,Memory);
+  % [fits, Memory]= calcuFit(Abs, embedParas,Memory);
 
   [fits, sortInd]= sort(fits, 'ascend');  % descend:降序, 要求优秀的排在前面
   Abs= Abs(sortInd, :);
