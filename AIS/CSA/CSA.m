@@ -10,17 +10,14 @@ sharpedPath = [Root,'sharpeds\',name];
 sharpedStegoPath = [Root,'sharpedStegos\',name];
 embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
     'sharpedStegoPath',sharpedStegoPath,'payLoad',payLoad);
-% srcData = single(imread(srcPath));
-% srcStegoData = HUGO_like(uint8(srcData), payLoad);
-% imwrite(uint8(srcStegoData),srcStegoPath, 'pgm');
 
 NumParas = 2;  % 参数个数
+NumTotal = 15; % 抗体个数
+Iters = 10;    % 迭代次数
 Precision = 0.01;
-Vmin = 1;  Vmax = 1.5;
+Vmin = 0.1;  Vmax = 5;
 L = log2( ((Vmax-Vmin)/Precision) + 1);
 L = ceil(L);  % 编码长度
-NumTotal = 15;  % 抗体个数
-Iters = 8;  % 迭代次数
 Memory.K = {};  Memory.V = zeros(20,1,'single');
 Memory.last=uint8(1);
 
@@ -33,10 +30,10 @@ MultRata = 0.3;
 PClone = 0.3;  NumCloned = round(NumTotal * PClone);
 PMuMin = 0.02;  PMuMax = 0.1;  PMu = PMuMin;
 PNewMin = 0.1; PNewMax = 0.3; PNew= NumTotal*PNewMin;
-T = 6;
 genes = initAb(NumTotal, NumParas*L);
 % 指定值编码
-% genes(1,:) = [1 0 0 0 0 0 1 1 1 0 0];
+genes(1,1:L)=[0 1 1 1 1 0 1 0 0];
+genes(1,L+1:end)=[0 1 1 1 1 0 1 0 0];
 % ------------------测试Castro---------------------------------
 %{
 f = '1 * x .* sin(4 * pi .* x) - 1 * y.* sin(4 * pi .* y + pi) + 1';
@@ -53,6 +50,7 @@ imprime(1,vxp,vyp,vzp,x,y,fit,1,1); title('Initial Population');
 %}
 
 %% 开始迭代
+countBreak = 1; T = round(0.5*Iters);
 for i=1:Iters
 %% 计算适应度
   Abs = decodeAbs(genes, NumParas,Vmin,Vmax);  % N*NumParas array
@@ -68,10 +66,10 @@ for i=1:Iters
     fits(NumTotal+1:end,:)=[];
   end
   % 日志
+  bestAbs(i,:) = Abs(1,:);  % Abs array
   bestFits(i) = fits(1);
-  bestAbs(i) = Abs(1);  % Abs: cell
   meanFits(i) = mean(fits);
-  %fprintf('\nIter:%d - best fit: %5.3f\n', i,fits(1));
+  fprintf('\nIter:%d - best fit: %5.3f\n', i,fits(1));
 
   if(fits(1) <=bestFits(end))
     countBreak = countBreak+1;

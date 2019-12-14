@@ -1,9 +1,9 @@
-function [rhoP1,rhoM1] = CostHUGO(coverImg, coefs)
+function [rhoP1,rhoM1] = CostHUGO_like(coverImg)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
 % fprintf('\n---CostHUGO Matlab!----\n');
-cH=coefs(1); cV=coefs(2);
+cH=1; cV=1;
 params.gamma = 1;
 params.sigma = 1;
 cover = single(coverImg);

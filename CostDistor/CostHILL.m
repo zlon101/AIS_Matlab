@@ -3,9 +3,8 @@ function [rhoP1,rhoM1] = CostHILL(coverImg)
 % 
 %%
 if(ischar(coverImg))
-   coverImg = imread(coverImg); 
+   coverImg = single(imread(coverImg)); 
 end
-coverImg = single(coverImg);
 wetCost = 10^8;
 %% ¸ßÍ¨H-KBÂË²¨Æ÷
 H = single([-1,2,-1; 2,-4,2; -1,2,-1]);

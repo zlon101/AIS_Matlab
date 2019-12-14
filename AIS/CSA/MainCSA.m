@@ -1,13 +1,12 @@
 function MainCSA(coverRoot, startInd, endInd,saveRoot)
-startInd='10'; endInd='12';
-coverRoot = 'E:\astego\Images\BOSS_ALL\';
+% startInd='1'; endInd='2';
+coverRoot = 'E:\astego\Images\standard_images\bmp\';
 payload = single(0.4);
 if(~exist('saveRoot','var'))
   saveRoot = 'E:\astego\CSA\';
 end
-
 % 遍历所有**格式文件
-coverDirs = dir([coverRoot, '*.pgm']);
+coverDirs = dir([coverRoot, '*.bmp']);
 num = length(coverDirs);
 if(exist([saveRoot,'bestAbs.mat'],'file'))
   load([saveRoot,'bestAbs.mat']);
@@ -28,7 +27,7 @@ clear getStart;
 fprintf('# start\n#count:%d - %d\n',startInd,endInd);
 
 %% 
-old=''; % t0=datetime('now');
+old=''; t0=datetime('now');
 for i = startInd:endInd
   if(~isempty(bestAbs{i,1}))
     continue;
@@ -36,13 +35,14 @@ for i = startInd:endInd
   cPath = [coverRoot, coverDirs(i).name];
   save([saveRoot,'coverDirs.mat'],'coverDirs'); clear coverDirs;
   save([saveRoot,'bestAbs.mat'],'bestAbs'); clear bestAbs;
+  clear bestFits TAbs
   
   [bestFits,TAbs] = CSA(cPath,payload);
-  load([saveRoot,'coverDirs.mat']); 
-  load([saveRoot,'bestAbs.mat']);
+  load([saveRoot,'coverDirs.mat']); load([saveRoot,'bestAbs.mat']);
   [vmin,~] = min(bestFits); 
   inds = (bestFits==vmin);
-  Ab = min(TAbs(inds));
+  TAbs = TAbs(inds,:); [~,ind] = min(TAbs(:,1));
+  Ab = TAbs(ind,:);
   bestAbs{i,1} = coverDirs(i).name;
   bestAbs{i,2} = Ab;
    
@@ -55,9 +55,9 @@ for i = startInd:endInd
   fprintf([repmat('\b',1,length(old)),msg]);
   old=msg;
 end
-fprintf('\n耗时: '); disp(datetime('now'));
+fprintf('\n耗时: '); disp(datetime('now')-t0);
 save([saveRoot,'bestAbs.mat'], 'bestAbs');
-fprintf('\n# end');
+fprintf('\n# end\n');
 end
 
 function start=getStart(Abs)

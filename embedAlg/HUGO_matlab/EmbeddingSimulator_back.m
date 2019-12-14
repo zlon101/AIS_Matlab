@@ -6,11 +6,11 @@ n = numel(x);
 lambda = calc_lambda(rhoP1, rhoM1, m, n);
 pChangeP1 = (exp(-lambda .* rhoP1))./(1 + exp(-lambda .* rhoP1) + exp(-lambda .* rhoM1));
 pChangeM1 = (exp(-lambda .* rhoM1))./(1 + exp(-lambda .* rhoP1) + exp(-lambda .* rhoM1));
-if fixEmbeddingChanges == 1
-    RandStream.setGlobalStream(RandStream('mt19937ar','seed',139187));
-else
-    RandStream.setGlobalStream(RandStream('mt19937ar','Seed',sum(100*clock)));
-end
+% if fixEmbeddingChanges == 1
+%     RandStream.setGlobalStream(RandStream('mt19937ar','seed',139187));
+% else
+%     RandStream.setGlobalStream(RandStream('mt19937ar','Seed',sum(100*clock)));
+% end
 randChange = rand(size(x));
 y = x;
 y(randChange < pChangeP1) = y(randChange < pChangeP1) + 1;
@@ -24,7 +24,7 @@ y(randChange >= pChangeP1 & randChange < pChangeP1+pChangeM1) = y(randChange >= 
       l3 = l3 * 2;
       pP1 = (exp(-l3 .* rhoP1))./(1 + exp(-l3 .* rhoP1) + exp(-l3 .* rhoM1));
       pM1 = (exp(-l3 .* rhoM1))./(1 + exp(-l3 .* rhoP1) + exp(-l3 .* rhoM1));
-      m3 = ternary_entropyf(pP1, pM1);
+      m3 = double( ternary_entropyf(pP1, pM1) );
       iterations = iterations + 1;
       if (iterations > 100)
         lambda = l3;
@@ -43,7 +43,7 @@ y(randChange >= pChangeP1 & randChange < pChangeP1+pChangeM1) = y(randChange >= 
       lambda = l1+(l3-l1)/2; 
       pP1 = (exp(-lambda .* rhoP1))./(1 + exp(-lambda .* rhoP1) + exp(-lambda .* rhoM1));
       pM1 = (exp(-lambda .* rhoM1))./(1 + exp(-lambda .* rhoP1) + exp(-lambda .* rhoM1));
-      m2 = ternary_entropyf(pP1, pM1);
+      m2 = double( ternary_entropyf(pP1, pM1) );
       if m2 < message_length
         l3 = lambda;
         m3 = m2;

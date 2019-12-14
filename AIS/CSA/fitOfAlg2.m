@@ -12,7 +12,7 @@ for i=1:num
     fits(i) = Mem.V(ind);
   else
     % ÒþÐ´
-    stego = HUGO(srcData, single(0.4), Abs(i,:));
+    stego = HUGO(srcData, embedParas.payLoad, Abs(i,:));
     fits(i) = calcuDist(srcData, stego);
     Mem.K{Mem.last}=K; Mem.V(Mem.last)=fits(i); Mem.last=Mem.last+1;
     
@@ -25,10 +25,9 @@ for i=1:num
       clear VT;
     end
     % ´òÓ¡
-    %msg=sprintf('- count: %3d/%d',i,num);
-    %fprintf([repmat('\b',1,length(old)),msg]);
-    %old=msg;
-  % if--end
+    msg=sprintf('- count: %3d/%d',i,num);
+    fprintf([repmat('\b',1,length(old)),msg]);
+    old=msg;
   end
 % for-end  
 end

@@ -1,7 +1,4 @@
-function [rhoP1,rhoM1] = CostUNIWD(coverImg)
-%COSTUNIWD 此处显示有关此函数的摘要
-%   此处显示详细说明
-%%
+function [rhoP1,rhoM1] = CostUNWD(coverImg)
 if(ischar(coverImg))
    coverImg = imread(coverImg); 
 end
@@ -52,4 +49,3 @@ rhoM1 = rho;
 rhoP1(cover==255) = wetCost; % do not embed +1 if the pixel has max value
 rhoM1(cover==0) = wetCost; % do not embed -1 if the pixel has min value
 end
-
