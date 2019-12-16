@@ -3,6 +3,7 @@ function [fits,Mem]=fitOfAlg2(Abs,embedParas,Mem)
 % 失真函数的参数优化方案, 计算其适应度
 %%
 srcData = single(imread(embedParas.srcPath));
+Fc = SRMProces(SRMQ1({embedParas.srcPath}),0);
 num = size(Abs,1);
 fits = zeros(num,1,'single'); old='';
 for i=1:num
@@ -12,10 +13,13 @@ for i=1:num
     fits(i) = Mem.V(ind);
   else
     % 隐写
-    stego = HUGO(srcData, embedParas.payLoad, Abs(i,:));
-    fits(i) = calcuDist(srcData, stego);
-    Mem.K{Mem.last}=K; Mem.V(Mem.last)=fits(i); Mem.last=Mem.last+1;
+    %stego = HUGO(srcData, embedParas.payLoad, Abs(i,:));
+    imwrite(uint8(HUGO(srcData, embedParas.payLoad, Abs(i,:))),...
+      embedParas.sharpedStegoPath, 'pgm');
+    fits(i) = norm(Fc - SRMProces(SRMQ1({embedParas.sharpedStegoPath}),0));
+    %fits(i) = calcuDist(srcData, stego);
     
+    Mem.K{Mem.last}=K; Mem.V(Mem.last)=fits(i); Mem.last=Mem.last+1;
     if(Mem.last > length(Mem.V))
       last = Mem.last;
       VT=Mem.V;

@@ -3,26 +3,24 @@ function [bestFits,bestAbs,meanFits] = CSA(srcPath,payLoad)
 %%
 payLoad = single(payLoad);
 Root = 'E:\astego\CSA\';
-% name = split(srcPath, '\');  name = name(end);
 name = 'xx.pgm';
-% srcStegoPath= [Root,'stegos\', name];
 sharpedPath = [Root,'sharpeds\',name];
 sharpedStegoPath = [Root,'sharpedStegos\',name];
 embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
     'sharpedStegoPath',sharpedStegoPath,'payLoad',payLoad);
 
-NumParas = 2;  % 参数个数
+NumParas = 4;  % 参数个数
 NumTotal = 15; % 抗体个数
 Iters = 10;    % 迭代次数
 Precision = 0.01;
-Vmin = 0.1;  Vmax = 5;
+Vmin = 0.5;  Vmax = 1.5;
 L = log2( ((Vmax-Vmin)/Precision) + 1);
 L = ceil(L);  % 编码长度
 Memory.K = {};  Memory.V = zeros(20,1,'single');
 Memory.last=uint8(1);
 
 % output
-bestAbs = zeros(Iters, NumParas,'single');
+bestAbs  = zeros(Iters, NumParas,'single');
 bestFits = zeros(Iters, 1,'single');
 meanFits = zeros(Iters,1,'single');
 % 初始化
@@ -32,8 +30,8 @@ PMuMin = 0.02;  PMuMax = 0.1;  PMu = PMuMin;
 PNewMin = 0.1; PNewMax = 0.3; PNew= NumTotal*PNewMin;
 genes = initAb(NumTotal, NumParas*L);
 % 指定值编码
-genes(1,1:L)=[0 1 1 1 1 0 1 0 0];
-genes(1,L+1:end)=[0 1 1 1 1 0 1 0 0];
+genes(1,:)=zeros(1,size(genes,2));
+genes(1,L:L:end)=1;
 % ------------------测试Castro---------------------------------
 %{
 f = '1 * x .* sin(4 * pi .* x) - 1 * y.* sin(4 * pi .* y + pi) + 1';
@@ -78,9 +76,7 @@ for i=1:Iters
     PMu = PMuMin;
     PNew = PNewMin;
   end
-  if(countBreak > T)
-    break;
-  elseif(countBreak > 0.5*T)
+  if(countBreak >T)
     PMu = PMuMax;
     PNew = PNewMax;
   end

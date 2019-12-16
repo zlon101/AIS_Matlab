@@ -1,12 +1,12 @@
 function MainCSA(coverRoot, startInd, endInd,saveRoot)
 % startInd='1'; endInd='2';
-coverRoot = 'E:\astego\Images\standard_images\bmp\';
+coverRoot = 'E:\astego\Images\BOSS_ALL\';
 payload = single(0.4);
 if(~exist('saveRoot','var'))
   saveRoot = 'E:\astego\CSA\';
 end
 % 遍历所有**格式文件
-coverDirs = dir([coverRoot, '*.bmp']);
+coverDirs = dir([coverRoot, '*.pgm']);
 num = length(coverDirs);
 if(exist([saveRoot,'bestAbs.mat'],'file'))
   load([saveRoot,'bestAbs.mat']);
@@ -36,8 +36,9 @@ for i = startInd:endInd
   save([saveRoot,'coverDirs.mat'],'coverDirs'); clear coverDirs;
   save([saveRoot,'bestAbs.mat'],'bestAbs'); clear bestAbs;
   clear bestFits TAbs
-  
+  t0=tic;
   [bestFits,TAbs] = CSA(cPath,payload);
+  disp(toc(t0));
   load([saveRoot,'coverDirs.mat']); load([saveRoot,'bestAbs.mat']);
   [vmin,~] = min(bestFits); 
   inds = (bestFits==vmin);

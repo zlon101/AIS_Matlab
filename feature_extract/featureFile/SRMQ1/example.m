@@ -1,7 +1,7 @@
-%               EXAMPLE - USING MEX "Projection Spatial Rich Model"
+%               EXAMPLE - USING MEX "Spatial Rich Model"
 %
 % -------------------------------------------------------------------------
-% Copyright (c) 2013 DDE Lab, Binghamton University, NY.
+% Copyright (c) 2012 DDE Lab, Binghamton University, NY.
 % All Rights Reserved.
 % -------------------------------------------------------------------------
 % Permission to use, copy, modify, and distribute this software for
@@ -23,26 +23,51 @@
 % Contact: vojtech_holub@yahoo.com
 %          jan@kodovsky.com
 %          fridrich@binghamton.edu
-%          November 2012, http://dde.binghamton.edu
+%          May 2012, http://dde.binghamton.edu
 % -------------------------------------------------------------------------
-clc; close all;
+% [1] Rich Models for Steganalysis of Digital Images, J. Fridrich and J.
+% Kodovsky, IEEE Transactions on Information Forensics and Security, 2011.
+% Under review. 
+% http://dde.binghamton.edu/kodovsky/pdf/TIFS2012-SRM.pdf
+% -------------------------------------------------------------------------
+clc; clear all;
 
 % Specify all images for extraction
-I = imread('1.pgm');
+ImageSet = {'images\1.pgm', ...
+            'images\2.pgm', ...
+            'images\3.pgm', ...
+            'images\4.pgm', ...
+            'images\5.pgm'};
 
-tstart = tic;
 %% --------------------
-% Run default PSRM extraction
+% SRM extraction by MEX 
 % ---------------------
-q = 1; % Use q=3 for detection of JPEGs in spatial domain
+fprintf('SRM extraction');
+MEXstart = tic;
 
-fprintf('PSRM extraction');
-F = PSRM(I, q);
+%% Run default SRM extraction
+F = SRMQ1(ImageSet);
 
-%% Results        
-tend = toc(tstart);
+%% SRM MEX extraction can be configured in following way:
+% (Using also default values - for detailed information see [1])
+% Any or all the following settings might be included
+
+%{
+config.T = int32(2);
+config.order = int32(4);
+config.merge_spams = logical(true);
+config.symm_sign = logical(true);
+config.symm_reverse = logical(true);
+config.symm_minmax = logical(true);
+config.eraseLSB = logical(false);
+config.parity = logical(false);
+
+% F = SRM(ImageSet, config);
+%}
+        
+MEXend = toc(MEXstart);
 fprintf(' - DONE');
-fprintf('\n\nPSRM features extracted %.2f seconds\n', tend);
+fprintf('\n\nSRM extracted %d images in %.2f seconds, in average %.2f seconds per image\n', numel(ImageSet), MEXend, MEXend / numel(ImageSet));
 Ss = fieldnames(F);
 fprintf('\n"F" contains %d submodel feature matrices (number of images x feature dimension): \n', numel(Ss));
 for Sid = 1:length(Ss)

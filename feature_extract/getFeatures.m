@@ -1,4 +1,4 @@
-function fetuStruct = getFeatures(imgRoot, numSample, Q)
+function fetuStruct = getFeatures(imgRoot, numSample)
 % 计算图像特征
 % imgPath       图像目录
 % numSample:    设置样本个数
@@ -21,13 +21,7 @@ else
   for i = 1:length(ImgLists)                % 遍历结构体就可以一一处理图片了
     imgPath=[imgRoot ImgLists(i).name];
     Names{i}=ImgLists(i).name;
-    % pgm格式
-    %{
-    [~,~,format]=fileparts(imgName);    
-    if(~isequal(format,'.pgm'))
-        continue;
-    end
-    %}
+    F=[F;SRMProces(SRMQ1({imgPath}),0)];
     %F=[F;ccpev548(imgName,Q)];
     %F=[F;chen486(imgName)'];
     %F=[F;cchen972(imgName,80)'];
@@ -36,7 +30,6 @@ else
     %F=[F;mainDctrMatlab(imgName)];
     %F=[F;CSR(imgName)];
     %F=[F;structProce(CFstar(imgName,80),1)];
-    F=[F;structProce(SRMexample({imgPath}),0)];
     %F=[F;structProce(PSRM(imgName), 0)];
     %isstruct()    
     count=count+1;
@@ -51,22 +44,4 @@ else
 end
 [fetuStruct.names,ind]=sort(Names);
 fetuStruct.F=F(ind, :);
-end
-
-%%
-function F=structProce(S, reversal)
-% reversal：是否转置
-propertys=fieldnames(S);
-len=length(propertys);
-F=[];
-if(reversal)
-    for i=1:len
-        F=[F; getfield(S,propertys{i})];
-    end
-    F=F';
-else
-    for i=1:len
-        F=[F, getfield(S,propertys{i})];
-    end
-end
 end

@@ -1,4 +1,4 @@
-function [y] = EmbeddingSimulator(x, rhoP1, rhoM1, m, fixEmbeddingChanges)
+% function [y] = EmbeddingSimulator(x, rhoP1, rhoM1, m, fixEmbeddingChanges)
 % Embedding simulator simulates the embedding made by the best possible ternary coding method (it embeds on the entropy bound). 
 % This can be achieved in practice using "Multi-layered  syndrome-trellis codes" (ML STC) that are asymptotically aproaching the bound.
 %%

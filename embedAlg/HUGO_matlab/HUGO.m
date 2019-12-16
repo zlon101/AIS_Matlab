@@ -1,9 +1,9 @@
-function [stego, distortion] = HUGO(cover, payload)
+function [stego, distortion] = HUGO(cover, payload, coefs)
 % HUGOÀ„∑®
 % cover: single m*n array
 % payload: single
 %%
-[rhoP1,rhoM1] = CostHUGO(cover);
+[rhoP1,rhoM1] = CostHUGO(cover,coefs);
 %% Embedding
 % embedding simulator - params.qarity \in {2,3}
 stego = EmbeddingSimulator(cover, rhoP1, rhoM1, round(numel(cover)*payload), false);

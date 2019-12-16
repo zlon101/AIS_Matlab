@@ -1,5 +1,5 @@
 % -------------------------------------------------------------------------
-% Copyright (c) 2012 DDE Lab, Binghamton University, NY.
+% Copyright (c) 2014 DDE Lab, Binghamton University, NY.
 % All Rights Reserved.
 % -------------------------------------------------------------------------
 % Permission to use, copy, modify, and distribute this software for
@@ -37,7 +37,8 @@
 %
 %--------------------------------------------------------------------------
 % Input format:
-%   imageSet            - cell array of strings     - cell array of paths to the images
+%   image               - uint8 matrix              - matrix containing pixel values
+%   map                 - double probability map    - matrix with embedding probabilities
 %
 %   config.T			- int32		- default 2		- residual threshold
 %   config.order		- int32		- default 4		- co-occurrence order

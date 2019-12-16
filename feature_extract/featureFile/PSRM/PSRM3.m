@@ -1,6 +1,6 @@
-function f = PSRM(IMAGE, q)
+function f = PSRM3(IMAGE)
 % -------------------------------------------------------------------------
-% Copyright (c) 2011 DDE Lab, Binghamton University, NY.
+% Copyright (c) 2013 DDE Lab, Binghamton University, NY.
 % All Rights Reserved.
 % -------------------------------------------------------------------------
 % Permission to use, copy, modify, and distribute this software for
@@ -17,25 +17,53 @@ function f = PSRM(IMAGE, q)
 % disclaims any warranties, and has no obligations to provide maintenance,
 % support, updates, enhancements or modifications.
 % -------------------------------------------------------------------------
-% Contact: jan@kodovsky.com | fridrich@binghamton.edu | November 2011
+% Contact: vojtech_holub@yahoo.com | fridrich@binghamton.edu | January 2013
 %          http://dde.binghamton.edu/download/feature_extractors
 % -------------------------------------------------------------------------
-% Extracts 39 submodels presented in [1] -- only q=1c. All features are
+% Extracts 39 submodels presented in [2] -- All features are
 % calculated in the spatial domain and are stored in a structured variable
 % 'f'. For more deatils about the individual submodels, please see the
-% publication [1]. Total dimensionality of all 39 submodels is 12,753.
+% publication [1][2]. Total dimensionality of is 4290 x settings.projCount.
 % -------------------------------------------------------------------------
-% Input:  IMAGE ... path to the image (can be JPEG)
+% Input:  IMAGE ... path to the image or its pixel value matrix
 % Output: f ...... extracted PSRM features in a structured format
 % -------------------------------------------------------------------------
+% [1] Random Projections of Residuals as an Alternative to Co-occurrences 
+% in Steganalysis, V. Holub and J. Fridrich, Proc. SPIE, Electronic 
+% Imaging, Media Watermarking, Security, and Forensics XV, 2013
+%
+% [2] Rich Models for Steganalysis of Digital Images, J. Fridrich and J.
+% Kodovsky, IEEE Transactions on Information Forensics and Security, 2011.
+% Under review.
+% -------------------------------------------------------------------------
 
-settings.qBins = 3;
-settings.projCount = 55;
+% Setting for PSRM3
+settings.projCount = 3; 
+
+% Setting for PSRM8
+%settings.projCount = 8; 
+
+settings.B = 2;
+settings.qBins = 5;
 settings.seedIndex = 1;
-settings.fixedSize = 8;
-settings.binSize = q;
 
-X = double(IMAGE);
+settings.neighborhoods{1} = [1, 1, 1, 1];
+settings.neighborhoods{2} = [1, 1, 1, 1, 1, 1, 1, 1];
+settings.neighborhoods{3} = [1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1];
+settings.neighborhoods{4} = [1, 1, 0, 0; 1, 1, 1, 0; 0, 1, 1, 1; 0, 0, 1, 1];
+settings.neighborhoods{5} = [1, 1; 1, 1];
+settings.neighborhoods{6} = [1, 1, 1; 1, 1, 1; 1, 1, 1];
+settings.neighborhoods{7} = [1, 1, 1, 1; 1, 1, 1, 1; 1, 1, 1, 1; 1, 1, 1, 1];
+settings.neighborhoods{8} = [1, 1, 1, 1, 1; 1, 1, 1, 1, 1; 1, 1, 1, 1, 1; 1, 1, 1, 1, 1; 1, 1, 1, 1, 1];
+settings.neighborhoods{9} = [1, 1, 1, 1; 1, 1, 1, 1];
+settings.neighborhoods{10} = [1, 0, 0, 0; 1, 1, 0, 0; 1, 1, 1, 0; 1, 1, 1, 1];
+settings.neighborhoods{11} = [0, 0, 1, 0, 0; 0, 0, 1, 0, 0; 1, 1, 1, 1, 1; 0, 0, 1, 0, 0; 0, 0, 1, 0, 0];
+
+if ischar(IMAGE)  
+    X = double(imread(IMAGE));
+else
+    X = double(IMAGE);
+end    
 
 f = post_processing(all1st(X,1),'f1');      % 1st order
 f = post_processing(all2nd(X,2),'f2',f);    % 2nd order
@@ -488,73 +516,71 @@ end
 
 function h = ProjHistSpam(D, type, centerVal)
     RandStream.setGlobalStream(RandStream('mt19937ar','Seed',settings.seedIndex));
-    h = zeros(settings.qBins * settings.projCount, 1);
-    for projIndex = 1:settings.projCount
-            Psize = randi(settings.fixedSize, 2, 1);
-            
-            P = randn(Psize(1), Psize(2)); 
-            n = sqrt(sum(P(:).^2));
-            P = P ./ n;
-            
+    h = zeros(numel(settings.neighborhoods) * settings.qBins * settings.projCount, 1);
+    for neighborhoodIndex = 1:numel(settings.neighborhoods)
+        neighborhood = settings.neighborhoods{neighborhoodIndex};
+        for projIndex = 1:settings.projCount
+            P = zeros(size(neighborhood));
+            P(neighborhood==1) = randi(settings.B*2+1, sum(neighborhood(:)==1), 1)-settings.B-1;
             if strcmp(type, 'ver'), P = P'; end;
-            binEdges = 0:settings.qBins;
-            binEdges = binEdges * settings.binSize * centerVal;
-            proj = conv2(D, P, 'valid');
+            binSize = sqrt(sum(P(:).^2));
+            binEdges = [0:binSize*centerVal:binSize*(settings.qBins-1)*centerVal, inf];
+            proj = int32(conv2(D, P, 'valid'));
             h_neigh = histc(abs(proj(:)), binEdges); 
             h_neigh = h_neigh(1:end-1);
             if size(P, 2) > 1
-                proj = conv2(D, fliplr(P), 'valid');
+                proj = int32(conv2(D, fliplr(P), 'valid'));
                 t = histc(abs(proj(:)), binEdges); 
                 h_neigh = h_neigh + t(1:end-1);
             end
             if size(P, 1) > 1
-                proj = conv2(D, flipud(P), 'valid');
+                proj = int32(conv2(D, flipud(P), 'valid'));
                 t = histc(abs(proj(:)), binEdges); 
                 h_neigh = h_neigh + t(1:end-1);
             end
             if all(size(P)>1)
-                proj = conv2(D, rot90(P, 2), 'valid');
+                proj = int32(conv2(D, rot90(P, 2), 'valid'));
                 t = histc(abs(proj(:)), binEdges); 
                 h_neigh = h_neigh + t(1:end-1);
             end
             
-            h((projIndex-1)*settings.qBins + 1:projIndex*settings.qBins, 1) = h_neigh;
+            h((neighborhoodIndex-1)*settings.qBins*settings.projCount + (projIndex-1)*settings.qBins + 1:(neighborhoodIndex-1)*settings.qBins*settings.projCount + projIndex*settings.qBins, 1) = h_neigh;
+        end
     end
 end
 
 function h = ProjHistMinMax(D, type, centerVal)
     RandStream.setGlobalStream(RandStream('mt19937ar','Seed',settings.seedIndex));
-    h = zeros(settings.qBins * settings.projCount * 2, 1);
-    for projIndex = 1:settings.projCount
-            Psize = randi(settings.fixedSize, 2, 1);
-            
-            P = randn(Psize(1), Psize(2)); 
-            n = sqrt(sum(P(:).^2));
-            P = P ./ n;
-       
+    h = zeros(numel(settings.neighborhoods) * settings.qBins * settings.projCount * 2, 1);
+    for neighborhoodIndex = 1:numel(settings.neighborhoods)
+        neighborhood = settings.neighborhoods{neighborhoodIndex};
+        for projIndex = 1:settings.projCount
+            P = zeros(size(neighborhood));
+            P(neighborhood==1) = randi(settings.B*2+1, sum(neighborhood(:)==1), 1)-settings.B-1;
             if strcmp(type, 'ver'), P = P'; end;
-            binEdges = -settings.qBins:settings.qBins;
-            binEdges = binEdges * settings.binSize * centerVal;
-            proj = conv2(D, P, 'valid');
+            binSize = sqrt(sum(P(:).^2));
+            binEdges = [-inf, -binSize*(settings.qBins-1)*centerVal:binSize*centerVal:binSize*(settings.qBins-1)*centerVal, inf];
+            proj = int32(conv2(D, P, 'valid'));
             h_neigh = histc(proj(:), binEdges); 
             h_neigh = h_neigh(1:end-1);
             if size(P, 2) > 1
-                proj = conv2(D, fliplr(P), 'valid');
+                proj = int32(conv2(D, fliplr(P), 'valid'));
                 t = histc(proj(:), binEdges); 
                 h_neigh = h_neigh + t(1:end-1);
             end
             if size(P, 1) > 1
-                proj = conv2(D, flipud(P), 'valid');
+                proj = int32(conv2(D, flipud(P), 'valid'));
                 t = histc(proj(:), binEdges); 
                 h_neigh = h_neigh + t(1:end-1);
             end
             if all(size(P)>1)
-                proj = conv2(D, rot90(P, 2), 'valid');
+                proj = int32(conv2(D, rot90(P, 2), 'valid'));
                 t = histc(proj(:), binEdges); 
                 h_neigh = h_neigh + t(1:end-1);
             end
             
-            h((projIndex-1)*settings.qBins*2 + 1:projIndex*settings.qBins*2, 1) = h_neigh;
+            h((neighborhoodIndex-1)*settings.qBins*2*settings.projCount + (projIndex-1)*settings.qBins*2 + 1:(neighborhoodIndex-1)*settings.qBins*2*settings.projCount + projIndex*settings.qBins*2, 1) = h_neigh;
+        end
     end
  end
 
