@@ -12,7 +12,7 @@ embedParas = struct('srcPath',srcPath,'sharpedPath',sharpedPath,...
 NumParas = 4;  % 参数个数
 NumTotal = 15; % 抗体个数
 Iters = 10;    % 迭代次数
-Precision = 0.01;
+Precision = 0.1;
 Vmin = 0.5;  Vmax = 1.5;
 L = log2( ((Vmax-Vmin)/Precision) + 1);
 L = ceil(L);  % 编码长度
@@ -30,8 +30,8 @@ PMuMin = 0.02;  PMuMax = 0.1;  PMu = PMuMin;
 PNewMin = 0.1; PNewMax = 0.3; PNew= NumTotal*PNewMin;
 genes = initAb(NumTotal, NumParas*L);
 % 指定值编码
-genes(1,:)=zeros(1,size(genes,2));
-genes(1,L:L:end)=1;
+% genes(1,:)=zeros(1,size(genes,2));
+% genes(1,L:L:end)=1;
 % ------------------测试Castro---------------------------------
 %{
 f = '1 * x .* sin(4 * pi .* x) - 1 * y.* sin(4 * pi .* y + pi) + 1';

@@ -26,7 +26,7 @@ for fIndex = 1:3
     % compute residual
     R = conv2(coverPadded, F{fIndex}, 'same');
     % compute suitability
-    xi{fIndex} = conv2(1./(abs(R)+sgm), rot90(abs(F{fIndex}), 2), 'same');
+    xi{fIndex} = conv2(1./(abs(R)+sgm), rot90(abs(F{fIndex}),2), 'same');
     % correct the suitability shift if filter size is even
     if mod(size(F{fIndex}, 1), 2) == 0
         xi{fIndex} = circshift(xi{fIndex}, [1, 0]);

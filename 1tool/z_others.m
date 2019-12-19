@@ -85,6 +85,7 @@ binWidth = 1;
 hb=bar(center_c-0.5*binWidth, count_c, binWidth, 'FaceColor', ([173,217,226])/255,...
     'EdgeColor','black', 'LineWidth',1.2, 'LineStyle', '-');
 I = double(cover);
+
 %% 二维自适应降噪滤波
 J = round(wiener2(I, [3,3]));
 diff = J-I; tmp = diff(1:8,1:8);
@@ -128,10 +129,6 @@ seed_bootstrap = rand(randstream);
 
 randstream.subspaces = RandStream('mt19937ar','Seed',seed_subspaces);
 randstream.bootstrap = RandStream('mt19937ar','Seed',seed_bootstrap);
-
-%% 计算运行时间
-t0 = datetime('now');
-t1 = datetime('now');  fprintf('嵌入耗时: '); disp(t1-t0);
 
 %%
 indSubBlockLF = [8,8; 

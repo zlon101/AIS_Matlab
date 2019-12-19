@@ -1,5 +1,6 @@
 function MainCSA(coverRoot, startInd, endInd,saveRoot)
-% startInd='1'; endInd='2';
+% startInd='1'; 
+endInd='1';
 coverRoot = 'E:\astego\Images\BOSS_ALL\';
 payload = single(0.4);
 if(~exist('saveRoot','var'))
@@ -36,9 +37,8 @@ for i = startInd:endInd
   save([saveRoot,'coverDirs.mat'],'coverDirs'); clear coverDirs;
   save([saveRoot,'bestAbs.mat'],'bestAbs'); clear bestAbs;
   clear bestFits TAbs
-  t0=tic;
+  
   [bestFits,TAbs] = CSA(cPath,payload);
-  disp(toc(t0));
   load([saveRoot,'coverDirs.mat']); load([saveRoot,'bestAbs.mat']);
   [vmin,~] = min(bestFits); 
   inds = (bestFits==vmin);
@@ -47,10 +47,6 @@ for i = startInd:endInd
   bestAbs{i,1} = coverDirs(i).name;
   bestAbs{i,2} = Ab;
    
-  if(mod(i,10)==0)
-    %save([saveRoot,'bestAbs.mat'], 'bestAbs');
-    clear functions mex global;
-  end
   % ¥Ú”°
   msg=sprintf('- count: %3d/%d',i,num);
   fprintf([repmat('\b',1,length(old)),msg]);

@@ -15,11 +15,12 @@ Y = filter2(L1, abs(Y), 'same');
 %% 低通L2
 L2 = ones(15,'single');
 Cost = filter2(L2, Y.^-1, 'same');
+Cost = Cost./sum(L1(:))./sum(L2(:));
 %% adjust embedding costs
-Cost(Cost > wetCost) = wetCost; % threshold on the costs
-Cost(isnan(Cost)) = wetCost; % if all xi{} are zero threshold the cost
+Cost(Cost > wetCost) = wetCost;
+Cost(isnan(Cost)) = wetCost;
 rhoP1 = Cost;  % +1 的代价
 rhoM1 = Cost;
-rhoP1(coverImg==255) = wetCost; % do not embed +1 if the pixel has max value
-rhoM1(coverImg==0) = wetCost; % do not embed -1 if the pixel has min value
+rhoP1(coverImg==255) = wetCost;
+rhoM1(coverImg==0) = wetCost;
 end

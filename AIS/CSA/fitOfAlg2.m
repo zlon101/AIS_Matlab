@@ -13,7 +13,7 @@ for i=1:num
     fits(i) = Mem.V(ind);
   else
     % าþะด
-    %stego = HUGO(srcData, embedParas.payLoad, Abs(i,:));
+    % stego = HUGO(srcData, embedParas.payLoad, Abs(i,:));
     imwrite(uint8(HUGO(srcData, embedParas.payLoad, Abs(i,:))),...
       embedParas.sharpedStegoPath, 'pgm');
     fits(i) = norm(Fc - SRMProces(SRMQ1({embedParas.sharpedStegoPath}),0));

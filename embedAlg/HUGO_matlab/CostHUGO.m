@@ -1,4 +1,4 @@
-function [rhoP1,rhoM1] = CostHUGO(coverImg,coefs)
+% function [rhoP1,rhoM1] = CostHUGO(coverImg,coefs)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
@@ -62,7 +62,7 @@ rhoM1(coverImg == 0) = wetCost;
 %% 嵌套函数
   function D = GetLocalDistortion(C_resVect, S_resVect, params)
     % C_resVect: cover image 的残差矩阵
-    D = 0;    
+    D = single(0);    
     for i=1:4
      D= D+ GetLocalPotential(C_resVect(i:i+2), S_resVect(i:i+2), params);
     end
