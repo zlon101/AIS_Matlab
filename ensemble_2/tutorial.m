@@ -1,4 +1,4 @@
-function [PE,PFA,PMD,TrainArgs] = tutorial(cover, stego, numOfTrain)
+function [PE,PFA,PMD,trained_ensemble] = tutorial(cover, stego, numOfTrain)
 % -------------------------------------------------------------------------
 % Ensemble Classification | June 2013 | version 2.0 | TUTORIAL
 % -------------------------------------------------------------------------
@@ -49,10 +49,6 @@ Restriction only to images that have both cover and stego features (only
 those will be considered)
 %}
 
-if (nargin<2)
-    cover = load('example/cover.mat');
-    stego = load('example/stego.mat');
-end
 % names = intersect(cover.names,stego.names);    % 交集, 并去除重复项
 % names = sort(names);
 % 修改
@@ -79,10 +75,13 @@ RandStream.setGlobalStream(RandStream('mt19937ar','Seed',1));
 % Division into training/testing set (half/half & preserving pairs)
 random_permutation = randperm(size(C,1));
 if ~exist('numOfTrain', 'var')
-    numOfTrain = round(size(C,1)/2);
+  numOfTrain = round(size(C,1)/2);
 end
 training_set = random_permutation(1:numOfTrain);
 testing_set = random_permutation(numOfTrain+1 : end);
+if(numOfTrain>size(C,1)/2)
+  testing_set = random_permutation;
+end
 training_names = names(training_set);
 testing_names = names(testing_set);
 % Prepare training features
@@ -97,7 +96,6 @@ TST_stego = S(testing_set,:);
 % the number of base learners (L), both PRNG seeds (for subspaces and
 % bootstrap samples) are initialized randomly.
 [trained_ensemble, results] = ensemble_training(TRN_cover,TRN_stego);
-TrainArgs = trained_ensemble;
 % save('trained_ensemble','trained_ensemble');
 
 

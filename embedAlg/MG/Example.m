@@ -1,7 +1,3 @@
-function Example()
-% This example demonstrates how to use the MG embedding function
-
-% Read the input cover image
 Cover = double(imread ('1.pgm'));
 
 % Set the payload to 0.4 bpp
@@ -25,4 +21,3 @@ title('MG - Embedding Change Probabilities');
 figure;
 imshow(Stego-Cover,[]);
 title('MG - Changed Pixels (+1 -> white ,-1 -> black)');
-end

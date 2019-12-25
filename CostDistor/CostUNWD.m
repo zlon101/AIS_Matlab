@@ -1,6 +1,6 @@
 function [rhoP1,rhoM1] = CostUNWD(coverImg)
 if(ischar(coverImg))
-   coverImg = imread(coverImg); 
+	coverImg = imread(coverImg); 
 end
 cover = single(coverImg);
 [k,l] = size(cover);
@@ -23,19 +23,19 @@ coverPadded = padarray(cover, [padSize padSize], 'symmetric');
 
 xi = cell(3, 1);
 for fIndex = 1:3
-    % compute residual
-    R = conv2(coverPadded, F{fIndex}, 'same');
-    % compute suitability
-    xi{fIndex} = conv2(1./(abs(R)+sgm), rot90(abs(F{fIndex}),2), 'same');
-    % correct the suitability shift if filter size is even
-    if mod(size(F{fIndex}, 1), 2) == 0
-        xi{fIndex} = circshift(xi{fIndex}, [1, 0]);
-    end
-    if mod(size(F{fIndex}, 2), 2) == 0
-        xi{fIndex} = circshift(xi{fIndex}, [0, 1]); 
-    end
-    % remove padding
-    xi{fIndex} = xi{fIndex}(((size(xi{fIndex}, 1)-k)/2)+1:end-((size(xi{fIndex}, 1)-k)/2), ((size(xi{fIndex}, 2)-l)/2)+1:end-((size(xi{fIndex}, 2)-l)/2));
+  % compute residual
+  R = conv2(coverPadded, F{fIndex}, 'same');
+  % compute suitability
+  xi{fIndex} = conv2(1./(abs(R)+sgm), rot90(abs(F{fIndex}),2), 'same');
+  % correct the suitability shift if filter size is even
+  if mod(size(F{fIndex}, 1), 2) == 0
+    xi{fIndex} = circshift(xi{fIndex}, [1, 0]);
+  end
+  if mod(size(F{fIndex}, 2), 2) == 0
+    xi{fIndex} = circshift(xi{fIndex}, [0, 1]); 
+  end
+  % remove padding
+  xi{fIndex} = xi{fIndex}(((size(xi{fIndex}, 1)-k)/2)+1:end-((size(xi{fIndex}, 1)-k)/2), ((size(xi{fIndex}, 2)-l)/2)+1:end-((size(xi{fIndex}, 2)-l)/2));
 end
 
 % compute embedding costs \rho

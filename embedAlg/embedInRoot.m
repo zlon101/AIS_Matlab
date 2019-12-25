@@ -5,15 +5,15 @@ function embedInRoot(coverRoot,stegoRoot)
 % numSample:    设置样本个数
 % addpath(genpath('./featureFile'));      % 添加文件路径
 t0 = datetime('now');
-% coverRoot = 'E:\astego\Images\BOSS_ALL\';
-% stegoRoot = 'E:\astego\Images\stegos\自适应隐写CZL1_04\';
+coverRoot = 'E:\astego\Images\standard_images\';
+stegoRoot = 'E:\astego\标准图像集实验\HILL_04\';
 format = 'pgm';
 payLoad = single(0.4);
 numSample = -1;
 
 dirs  = dir([coverRoot,'*.',format]);
 % imgFiles(1)=[];imgFiles(1)=[];
-names=cell(length(dirs),1);           % 图像名,不含全部路径
+names=cell(length(dirs),1);
 if (~exist('numSample', 'var') || numSample<1)
   numSample=length(dirs);
 end
@@ -23,9 +23,9 @@ for i = 1:nImages
   names{i}=dirs(i).name;
   cPath=[coverRoot,dirs(i).name];
   % 嵌入算法
-  
-  stego=embedAlgCZL(single(imread(cPath)), payLoad);
+  stego = HILL(cPath, payLoad);
   imwrite(uint8(stego), [stegoRoot,names{i}],format);
+  %stego=embedAlgCZL(single(imread(cPath)), payLoad);
   %stego = S_UNIWARD(imread(cPath), payLoad);
   %stego = HUGO(single(imread(cPath)), payload, single([1,1]));
   %stego = HUGO_like(imread(cPath), payload);

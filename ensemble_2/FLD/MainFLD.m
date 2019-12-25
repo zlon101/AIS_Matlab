@@ -1,23 +1,34 @@
-clc;close all;
+
 FeatureDatas = 'D:\Program Files\Matlab2017b\bin\FeatureDatas\';
-FcPath = [FeatureDatas,'\covers\','FC_BOSS_SRM.mat'];
-FsPath = [FeatureDatas,'\stegos\','FS_HUGO_04_SRM.mat'];
-MFc = matfile(FcPath);
-MFs = matfile(FsPath);
+FcPath = [FeatureDatas,'\covers\','C_BOSS_SRM.mat'];
+FsPath = [FeatureDatas,'\stegos\SUNWD\','S_SUNWD_04_SRM.mat'];
+% load(FcPath); FC = C_BOSS_SRM.F;
+load(FsPath); FS = S_SUNWD_04_SRM.F;
+clear C_BOSS_SRM S_SUNWD_04_SRM S_HILL_04_SRM S_HUGO_04_SRM...
+  S_CZL2_04_SRM;
 
-% learner = TrainArgs(40);
-FLD_Test(MFc, MFs);
+% [PE,bestLearner]=getBestLearner(learners, FC, FS);
+PE = learnerTest(FC,FS,bestLearner);
+% [learner]=getLearnByTrain(FC, FS);
+% 缩放投影向量w
+% scale = 10/norm(learner.w);
+% learner.b = learner.b .* scale;  % 保留2位小数
+% learner.w = learner.w .* scale;  % 使w长度为10
+%}
 
-% fprintf('S的投影中心：%.3f\n',mean(PS,1) * learner.w);
-% fprintf('均值向量的距离:%.3f\n',norm(mean(PS)-mean(PC)));
-% figure;
-% learner = TrainArgs{minInd};
-% PC = C_BOSS_SRM.F(:,learner.subspace) * learner.w;
-% PS = S_HUGO_04_SRM.F(:,learner.subspace) * learner.w;
-% border = learner.b;
-% vmin = min(min(PC),min(PS));    vmax = max(max(PC),max(PS));
-% axis([0,length(PC), vmin, vmax]);
-% plot(PC, 1:size(PC,1), '.k');hold on;
-% plot(PS, 1:size(PS,1), '.r');hold on;
-% hp = plot([border, border],[0,size(PS,1)], '-r');hold on;
-% legend('c','s', ['b: ', num2str(border)]);
+DC = FC(:, bestLearner.subspace) * bestLearner.w;
+DS = FS(:, bestLearner.subspace) * bestLearner.w;
+D_SUNWD= DS-DC;
+%% 可视化
+%{
+figure;
+border = learner.b;
+vmin = min([DC;DS]);  vmax = max([DC;DS]);
+plot(DC, 1:size(DC,1), '.k');hold on;
+plot(DS, 1:size(DS,1), '.r');hold on;
+hp = plot([border, border],[0,size(DS,1)], '-b');hold on;
+legend('c','s', ['b: ', num2str(border)]);
+axis([vmin,vmax, 0,length(DC)]);
+%}
+clear vmin vmax hp FcPath FeatureDatas FsPath border ans;
+%%

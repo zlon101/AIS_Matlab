@@ -100,8 +100,6 @@ function [trained_ensemble,results] = ensemble_training(Xc,Xs,settings)
 %       purposes
 % -------------------------------------------------------------------------
 
-C=Xc;
-S = Xs;
 if ~exist('settings','var'), settings.all_default = 1; end
 
 % check settings, set default values, initial screen print
@@ -112,53 +110,53 @@ if ~exist('settings','var'), settings.all_default = 1; end
 
 % search loop (if search for d_sub is to be executed)
 while SEARCH.in_progress
-    search_counter = search_counter+1;
+  search_counter = search_counter+1;
 
-    % initialization
-    [SEARCH.start_time_current_d_sub, i, next_random_subspace, TXT, base_learner] = ...
-        deal(tic, 0, 1, '', cell(settings.max_number_base_learners,1));
+  % initialization
+  [SEARCH.start_time_current_d_sub, i, next_random_subspace, TXT, base_learner] = ...
+      deal(tic, 0, 1, '', cell(settings.max_number_base_learners,1));
 
-    % loop over individual base learners
-    while next_random_subspace
-        i = i+1;
+  % loop over individual base learners
+  while next_random_subspace
+    i = i+1;
 
-        %%% RANDOM SUBSPACE GENERATION
-        base_learner{i}.subspace = generate_random_subspace(settings.randstream.subspaces,settings.max_dim,settings.d_sub);
+    %%% RANDOM SUBSPACE GENERATION
+    base_learner{i}.subspace = generate_random_subspace(settings.randstream.subspaces,settings.max_dim,settings.d_sub);
 
-        %%% BOOTSTRAP INITIALIZATION
-        OOB = bootstrap_initialization(Xc,Xs,OOB,settings);
+    %%% BOOTSTRAP INITIALIZATION
+    OOB = bootstrap_initialization(Xc,Xs,OOB,settings);
 
-        %%% TRAINING PHASE
-        base_learner{i} = FLD_training(Xc,Xs, base_learner{i}, OOB, settings);
+    %%% TRAINING PHASE
+    base_learner{i} = FLD_training(Xc,Xs, base_learner{i}, OOB, settings);
 
-        %%% OOB ERROR ESTIMATION
-        OOB = update_oob_error_estimates(Xc,Xs,base_learner{i},OOB,i);
+    %%% OOB ERROR ESTIMATION
+    OOB = update_oob_error_estimates(Xc,Xs,base_learner{i},OOB,i);
 
-        [next_random_subspace,MSG] = getFlag_nextRandomSubspace(i,OOB,settings);
+    [next_random_subspace,MSG] = getFlag_nextRandomSubspace(i,OOB,settings);
 
-        % SCREEN OUTPUT
-        CT = double(toc(SEARCH.start_time_current_d_sub));
-        TXT = updateTXT(TXT,sprintf(' - d_sub %s : OOB %.4f : L %i : T %.1f sec%s',k_to_string(settings.d_sub),OOB.error,i,CT,MSG),settings);
+    % SCREEN OUTPUT
+    CT = double(toc(SEARCH.start_time_current_d_sub));
+    TXT = updateTXT(TXT,sprintf(' - d_sub %s : OOB %.4f : L %i : T %.1f sec%s',k_to_string(settings.d_sub),OOB.error,i,CT,MSG),settings);
 
-    end % while next_random_subspace
+  end % while next_random_subspace
 
-    results.search.d_sub(search_counter) = settings.d_sub;
-    updateLog_swipe(settings,'\n');
+  results.search.d_sub(search_counter) = settings.d_sub;
+  updateLog_swipe(settings,'\n');
 
-    if OOB.error<MIN_OOB
-        % found the best value of k so far
-        MIN_OOB = OOB.error;
-        results.optimal_L = i;
-        results.optimal_d_sub = settings.d_sub;
-        results.optimal_OOB = OOB.error;
-        results.OOB_progress = OOB.y;
-        trained_ensemble = base_learner(1:i);
-    end
+  if OOB.error<MIN_OOB
+    % found the best value of k so far
+    MIN_OOB = OOB.error;
+    results.optimal_L = i;
+    results.optimal_d_sub = settings.d_sub;
+    results.optimal_OOB = OOB.error;
+    results.OOB_progress = OOB.y;
+    trained_ensemble = base_learner(1:i);
+  end
 
-    [settings,SEARCH] = update_search(settings,SEARCH,OOB.error);
-    results = add_search_info(results,settings,search_counter,SEARCH,i,CT);
-    clear base_learner OOB
-    OOB.error = 1;
+  [settings,SEARCH] = update_search(settings,SEARCH,OOB.error);
+  results = add_search_info(results,settings,search_counter,SEARCH,i,CT);
+  clear base_learner OOB
+  OOB.error = 1;
 end % while search_in_progress
 
 % training time evaluation

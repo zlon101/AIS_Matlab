@@ -6,11 +6,16 @@ HFilter = [-1, 2, -2, 2,-1;
           -2, 8,-12, 8,-2;
            2,-6,  8,-6, 2;
           -1, 2, -2, 2,-1];
-L1 = ones(3);
-L2 = ones(15);
-Y1 = imfilter(I,HFilter,'symmetric','same');
-Y2 = imfilter(abs(Y1),L1,'symmetric','same');
-Cost = imfilter(Y2.^-1,L2,'symmetric','same');
+KB = [-1,2,-1; 2,-4,2; -1,2,-1];
+L1= ones(3);
+L2=[1,2,1;
+    2,4,2;
+    1,2,1];
+% L2 = ones(15);
+
+Y1 = imfilter(I, KB,'symmetric','same');
+Y2 = imfilter(abs(Y1), L1,'symmetric','same');
+Cost = imfilter(Y2.^-1, abs(HFilter),'symmetric','same');
 Cost = Cost./sum(L1(:))./sum(L2(:));
 % adjust embedding costs
 wetCost = 10^8;

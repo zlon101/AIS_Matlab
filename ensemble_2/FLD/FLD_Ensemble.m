@@ -1,10 +1,12 @@
 function learner = FLD_Ensemble(C, S, learner)
+settings.all_default = 1;
+settings.ignore_nearly_singular_matrix_warning = 1;
 if(isstruct(C) && isstruct(S))
     C = C.F;    S = S.F;
 end
 % OOB.SUB = floor(size(C,1)*rand(size(C,1), 1)) + 1;
 if( ~exist('learner','var') )
-    learner.subspace = randperm(size(C,2));
+  learner.subspace = randperm(size(C,2));
 end
 Xm = C(:, learner.subspace);
 Xp = S(:, learner.subspace);
@@ -16,11 +18,11 @@ remove = false(1,size(Xm,2));
 % 去除重复项
 adepts = unique([find(Xm(1,:)==Xm(2,:)) find(Xp(1,:)==Xp(2,:))]);
 for ad_id = adepts
-    U1=unique(Xm(:,ad_id));
-    if numel(U1)==1
-        U2=unique(Xp(:,ad_id));
-        if numel(U2)==1, if U1==U2, remove(ad_id) = true; end; end
-    end
+  U1=unique(Xm(:,ad_id));
+  if numel(U1)==1
+    U2=unique(Xp(:,ad_id));
+    if numel(U2)==1, if U1==U2, remove(ad_id) = true; end; end
+  end
 end
 clear adepts U1 U2;
 
@@ -66,28 +68,28 @@ learner.w = sigCS\mu;
 [txt,warnid] = lastwarn(); %#ok<ASGLU>
 while( strcmp(warnid,'MATLAB:singularMatrix') || (strcmp(warnid,'MATLAB:nearlySingularMatrix') ...
         && ~settings.ignore_nearly_singular_matrix_warning) )
-    fprintf('\n\n-----ensemble_training.m 进入while循环------\n\n');
-    % pause;
-    lastwarn('');
-    if ~exist('counter','var'), counter=1; else counter = counter*5; end
-    sigCS = sigCS + counter*eps*eye(size(sigCS,1));
-    learner.w = sigCS\mu;
-    [txt,warnid] = lastwarn(); %#ok<ASGLU>
+  fprintf('\n\n-----ensemble_training.m 进入while循环------\n\n');
+  % pause;
+  lastwarn('');
+  if ~exist('counter','var'), counter=1; else counter = counter*5; end
+  sigCS = sigCS + counter*eps*eye(size(sigCS,1));
+  learner.w = sigCS\mu;
+  [txt,warnid] = lastwarn(); %#ok<ASGLU>
 end    
 warning('on','MATLAB:nearlySingularMatrix');
 warning('on','MATLAB:singularMatrix');
 if( length(sigCS)~=lengthOfSigC )
-    fprintf('\n\n-----ensemble_training.m length(sigCS)~=length(sigC)------\n\n');
-    % pause;
-    % resolve previously found NaN values, set the corresponding elements of w equal to zero
-    w_new = zeros(lengthOfSigC,1);
-    w_new(~nan_values) = learner.w;
-    learner.w = w_new;
+  fprintf('\n\n-----ensemble_training.m length(sigCS)~=length(sigC)------\n\n');
+  % pause;
+  % resolve previously found NaN values, set the corresponding elements of w equal to zero
+  w_new = zeros(lengthOfSigC,1);
+  w_new(~nan_values) = learner.w;
+  learner.w = w_new;
 end
 clear sigC mu;
 
 % find threshold to minimize FA+MD
-load('Xm');  load('Xp');
+load('Xm'); load('Xp');
 learner = findThreshold(Xm, Xp, learner);
 learner.b = round(learner.b,2);
 
@@ -128,31 +130,31 @@ Emin = (FA+MD);
 Eact = zeros(size(L-1));
 Eact2 = Eact;
 for idTr=1:length(P)-1
-    if L(idTr)==-1
-        FA=FA-1;
-        MD2=MD2+1;
-    else
-        FA2=FA2-1;
-        MD=MD+1;
-    end
-    Eact(idTr) = FA+MD;
-    Eact2(idTr) = FA2+MD2;
-    if Eact(idTr)<Emin
-        Emin = Eact(idTr);
-        iopt = idTr;
-        sgn=1;
-    end
-    if Eact2(idTr)<Emin
-        Emin = Eact2(idTr);
-        iopt = idTr;
-        sgn=-1;
-    end
+  if L(idTr)==-1
+    FA=FA-1;
+    MD2=MD2+1;
+  else
+    FA2=FA2-1;
+    MD=MD+1;
+  end
+  Eact(idTr) = FA+MD;
+  Eact2(idTr) = FA2+MD2;
+  if Eact(idTr)<Emin
+    Emin = Eact(idTr);
+    iopt = idTr;
+    sgn=1;
+  end
+  if Eact2(idTr)<Emin
+    Emin = Eact2(idTr);
+    iopt = idTr;
+    sgn=-1;
+  end
 end
 
 % 类边界border
 learner.b = sgn*0.5*(P(iopt)+P(iopt+1));
 if (sgn==-1)
-    learner.w = -learner.w; 
+  learner.w = -learner.w; 
 end
 end
 

@@ -1,8 +1,6 @@
 %% 滤波器
-% H = fspecial('gaussian',3,0.5);  % gaussian
-% Y1 = imfilter(I,H);
-% figure;imshow(Y1,[0,255]);
-
+H = fspecial('gaussian',3,0.5);  % gaussian
+Y1 = imfilter(I,H);
 
 %% SRM提取残差所用的高通滤波器
 F = [-1, 2, -2, 2,-1;
