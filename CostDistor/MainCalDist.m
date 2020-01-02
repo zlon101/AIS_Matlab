@@ -1,23 +1,21 @@
-cRoot = 'E:\astego\Images\BOSS_ALL\';
-sRoot = 'E:\astego\Images\stegos\SUNIWAD\SUNIWD_04\';
-D_SUNWD = 0;
+cRoot = 'E:\astego\StandExpers\covers\';
+sRoot = 'E:\astego\StandExpers\CZL\';
+D_CZL = 0;
 
 % 遍历所有**格式文件
 format='pgm';
 cDirs = dir([cRoot,'*.',format]);
 sDirs = dir([sRoot,'*.',format]);
 num = length(cDirs);
-D_SUNWD = zeros(num,1,'single');
+D_CZL = zeros(num,1,'single');
 count=0;  old=''; t0=datetime('now');
 for i = 1:num
   % names{i}=coverDirs(i).name;
   cPath = [cRoot, cDirs(i).name];
   sPath = [sRoot, sDirs(i).name];
-%   if(i==9819)
-%     D =  calcuDist(single(imread(cPath)),single(imread(sPath)));
-%   end
+
   % 计算stego 与 cover 之间的失真值
-  D_SUNWD(i) =  calcuDist(single(imread(cPath)),single(imread(sPath)));
+  D_CZL(i) =  calcuDist(single(imread(cPath)),single(imread(sPath)));
     
   % 打印
   count=count+1;

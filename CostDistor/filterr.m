@@ -1,4 +1,5 @@
 %% 滤波器
+
 H = fspecial('gaussian',3,0.5);  % gaussian
 Y1 = imfilter(I,H);
 
@@ -22,5 +23,6 @@ L= [1,2,1;
     1,2,1];
   
 %% 高斯低通
-
+% B = imgaussfilt(A)
+montage(I)
 %% 均值滤波

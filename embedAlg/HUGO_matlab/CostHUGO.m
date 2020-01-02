@@ -1,7 +1,8 @@
-% function [rhoP1,rhoM1] = CostHUGO(coverImg,coefs)
+function [rhoP1,rhoM1] = CostHUGO(coverImg,coefs)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
+coefs=single([1,1,1,1]);
 cH=coefs(1); cV=coefs(2); cD=coefs(3); cMD=coefs(4);
 params.gamma = single(1);
 params.sigma = single(1);
@@ -74,7 +75,7 @@ rhoM1(coverImg == 0) = wetCost;
     % sqrt 改为 abs
     c_w = (params.sigma + norm(c_res)) .^ (-params.gamma);
     s_w = (params.sigma + norm(s_res)) .^ (-params.gamma);
-    Vc = (c_w + s_w)*0.5;
-    %s_w=single(0);
+    %Vc = (c_w + s_w)*0.5;
+    Vc = c_w./s_w;
   end
 end

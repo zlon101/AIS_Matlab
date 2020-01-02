@@ -1,7 +1,9 @@
 FeatureDatas/
 images/
-costdistor/适应度数据/
+costDistor/适应度数据/
+costDistor/以标准测试集作载体/
 ensemble_2.0/训练参数/
+
 **/test/
 ais/csa/Experis/
 **/codegen/

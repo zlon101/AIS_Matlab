@@ -1,4 +1,4 @@
-function fetuStruct = getFeatures(imgRoot, numSample)
+function fetuStruct = getFeatures(imgRoot, nSamp)
 % 计算图像特征
 % imgPath       图像目录
 % numSample:    设置样本个数
@@ -7,21 +7,21 @@ function fetuStruct = getFeatures(imgRoot, numSample)
 %%
 F=[];
 count=0;  old='';
-ImgLists = dir([imgRoot, '*.pgm']);  % 遍历所有**格式文件
+imgDirs = dir([imgRoot, '*.pgm']);  % 遍历所有**格式文件
 % ImgLists(1)=[];ImgLists(1)=[];
-if isempty(ImgLists)
-  Names = split(imgRoot, '\');
-  Names = Names(end);
+if isempty(imgDirs)
+  names = split(imgRoot, '\');
+  names = names(end);
   F = structProce(SRM({imgRoot}),0);
 else
-  Names = cell(length(ImgLists),1);         % 图像名,不含全部路径
-  if numSample<=0
-      numSample=length(ImgLists);
+  names = cell(length(imgDirs),1); % 图像名,不含全部路径
+  if nSamp<=0
+    nSamp=length(imgDirs);
   end
-  for i = 1:length(ImgLists)                % 遍历结构体就可以一一处理图片了
-    imgPath=[imgRoot ImgLists(i).name];
-    Names{i}=ImgLists(i).name;
-    F=[F;SRMProces(SRMQ1({imgPath}),0)];
+  for i = 1:length(imgDirs)
+    imgPath=[imgRoot imgDirs(i).name];
+    names{i}=imgDirs(i).name;
+    F=[F;SRMProces( SRM({imgPath}), 0)];
     %F=[F;ccpev548(imgName,Q)];
     %F=[F;chen486(imgName)'];
     %F=[F;cchen972(imgName,80)'];
@@ -31,17 +31,18 @@ else
     %F=[F;CSR(imgName)];
     %F=[F;structProce(CFstar(imgName,80),1)];
     %F=[F;structProce(PSRM(imgName), 0)];
-    %isstruct()    
+    
+    % 打印
     count=count+1;
-    msg=sprintf('- count: %3d/%d',count,numSample);
+    msg=sprintf('- count: %3d/%d',count,nSamp);
     fprintf([repmat('\b',1,length(old)),msg]);
     old=msg;
-    if count>=numSample
+    if count>=nSamp
       break;
     end
   end
   fprintf('\nnumbel of img: %d\n', count);
 end
-[fetuStruct.names,ind]=sort(Names);
+[fetuStruct.names,ind]=sort(names);
 fetuStruct.F=F(ind, :);
 end

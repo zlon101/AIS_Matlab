@@ -23,11 +23,11 @@ DHILL= norm(S_HILL-Fc);
 DSUNWD= norm(S_SUNWD-Fc);
 %}
 %%  ß’Ê∂»¡ø
-D = S_HILL_04_SRM.F - C_BOSS_SRM.F;
+D = S_SUNWD04_SRM.F - C_Stand_SRM.F;
 % D= getSRMQ1FromSRM(S_SUNWD_04_SRM.F) - getSRMQ1FromSRM(C_StandImg_SRM.F);
-D_HILL = zeros(size(D,1),1);
+D_SUNWD = zeros(size(D,1),1);
 for i=1:size(D,1)
-  D_HILL(i)=norm(D(i,:));
+  D_SUNWD(i)=norm(D(i,:));
 end
 clear i t0 root name payLoad cpath ans stego cover D;
 

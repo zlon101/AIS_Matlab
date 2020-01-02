@@ -4,7 +4,7 @@ function F = LoadFeature(FeatRoot)
 %% 
 % FeatDir  = dir([FeatRoot '*.*']);         % 遍历所有**格式文件
 % FeatDir(1)=[];   FeatDir(1)=[];
-load('D:\Program Files\Matlab2017b\bin\feature_extract\SRMFeatOrder.mat');% SRMFeatOrder
+load('D:\Matlab2017b\bin\feature_extract\SRMFeatOrder.mat');% SRMFeatOrder
 f = [];
 % SRMFeatOrder = 1;
 num = size(SRMFeatOrder, 1);
