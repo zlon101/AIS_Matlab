@@ -1,6 +1,4 @@
 function stego = HILL(coverImg,payload)
-%HILL 此处显示有关此函数的摘要
-%   此处显示详细说明
 if(ischar(coverImg))
    coverImg = single(imread(coverImg));
 end

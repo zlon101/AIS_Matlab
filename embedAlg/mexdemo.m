@@ -6,4 +6,4 @@ payLoad = single(0.4);
 cover = single(imread([root,name]));
 
 %% าþะด
-stego = embedAlgCZL(cover,payLoad);
+[rhoP1,rhoM1] = CostCZL(cover)

@@ -2,12 +2,13 @@
 %%
 Root = 'E:\astego\Images\test\';
 name = '195.pgm';
+format='pgm';
 payLoad = single(0.4);
 srcPath = [Root, name];
 srcStegoPath = [Root,'stegos\',name];
 srcData = single(imread(srcPath));
-% srcStegoData = HUGO_like(uint8(srcData), payLoad);
-% imwrite(uint8(srcStegoData),srcStegoPath, 'pgm');
+srcStegoData = HUGO_like(uint8(srcData), payLoad);
+imwrite(uint8(srcStegoData),srcStegoPath, 'pgm');
 % Èñ»¯
 Am = 1;
 % [sharpedData, HF] = sharpen(srcData, Am);

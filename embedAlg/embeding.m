@@ -8,7 +8,9 @@ payLoad = single(0.4);
 cover = single(imread([root,name]));
 
 %% าþะด
+t0=tic;
 stego=embedAlgCZL(cover,payLoad);
+disp(toc(t0));
 % stego = S_UNIWARD(uint8(cover), payLoad);
 % imwrite(uint8(stego), SUNWDPath, 'pgm');
 % stego = HILL(cover, payLoad);

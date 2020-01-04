@@ -3,14 +3,14 @@ srcRoot = 'E:\astego\Images\standard_test_images\bmp\';
 dstRoot = 'E:\astego\Images\standard_test_images\pgm\';
 numSample = -1;
 
-imgFiles  = dir([srcRoot, '*.bmp']);       % 遍历所有jpg格式文件
-Names=cell(length(imgFiles),1);           % 图像名,不含全部路径
+imgFiles  = dir([srcRoot, '*.bmp']);
+Names=cell(length(imgFiles),1);
 if (~exist('numSample', 'var') || numSample<1)
     numSample=length(imgFiles);
 end
 nImages = length(imgFiles);
 old='';
-for i = 1:nImages                % 遍历结构体就可以一一处理图片了   
+for i = 1:nImages
     Names{i}=imgFiles(i).name;
     src = imread([srcRoot,Names{i}]);
     name = split(Names{i},'.');  name = name{1};

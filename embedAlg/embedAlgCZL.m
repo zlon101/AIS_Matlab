@@ -4,7 +4,7 @@ function stego=embedAlgCZL(I,payload)
 if(ischar(I))
 	I = single(imread(I));
 end
-[rhoP1,rhoM1] = CostCZL(I);
+[rhoP1,rhoM1] = CostCZL_mex(I);
 % [rhoP1,rhoM1] = CostUNWDOpt(I);
 
 % P1=1./rhoP1;  M1=1./rhoM1; stego=1;

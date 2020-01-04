@@ -1,15 +1,19 @@
-function embedInRoot(coverRoot,stegoRoot,startInd,endInd)
+function embedInRoot(coverRoot,stegoRoot,payLoad,startInd,endInd)
 % 根据隐写算法对目录中的图像进行隐写
 % coverRoot       图像目录
 % stegRoot      输出载密图像目录
 % numSample:    设置样本个数
 
-% coverRoot = 'E:\astego\StandExpers\covers\';
-% stegoRoot = 'E:\astego\StandExpers\CZL\';
+coverRoot = 'E:\astego\StandExpers\covers\';
+stegoRoot = 'E:\astego\StandExpers\CZL\';
 format = 'pgm';
-payLoad = single(0.4);
 dirs  = dir([coverRoot,'*.',format]);
 nImages = length(dirs);
+if(exist('payLoad','var') && str2double(payLoad)>0)
+  payLoad = single(str2double(payLoad));
+else
+  payLoad = single(0.1);
+end
 if(exist('startInd','var') && str2double(startInd)>0)
   startInd = single(str2double(startInd));
 else
@@ -20,18 +24,18 @@ if(exist('endInd','var'))
 else 
   endInd=single(nImages);
 end
+
 % names=cell(length(dirs),1);
-fprintf('# start\n#count: %d - %d\n',startInd,endInd);
+fprintf('# start# count: %d - %d\npayload: %d\n',startInd,endInd,payLoad);
 
 old=''; t0 = datetime('now');
 for i=startInd : endInd
   cPath=[coverRoot,dirs(i).name]; %names{i}=dirs(i).name;
   
   % 嵌入算法
-  t0=tic;
-  stego=embedAlgCZL(cPath, payLoad);
-  disp(toc(t0));
+  stego = HILL(cPath, payLoad);
   imwrite(uint8(stego), [stegoRoot,dirs(i).name],format);
+  %stego=embedAlgCZL(cPath, payLoad);
   %stego = MiPOD( single(imread(cPath)), payLoad);
   %stego = HILL(cPath, payLoad);
   %stego = HUGO_like(imread(cPath), payLoad);
