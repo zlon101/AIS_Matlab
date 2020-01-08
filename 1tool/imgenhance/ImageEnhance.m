@@ -1,4 +1,4 @@
-function ImageEnhance(outRoot, Am)
+function ImageEnhance(inRoot,outRoot, Am)
 %{
 close all;clc;
 bossDir='E:\astego\Images\BOSS_ALL\';
@@ -42,9 +42,10 @@ clear bossDir cDirs sDirs cRoot sRoot immuImg cover i payload stego ...
 %}
 
 %% 批量增强
+% inRoot = 'E:\astego\Images\BOSS_ALL\';
 % outRoot= 'F:\astego\Images\sharped\锐化_S31_Am0.8\';
 Am = str2double(Am);
-inRoot = 'E:\astego\Images\BOSS_ALL\';
+
 format = 'pgm';
 dirs = dir([inRoot, '*.',format]);
 names = cell(length(dirs),1);

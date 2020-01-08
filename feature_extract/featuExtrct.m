@@ -1,27 +1,34 @@
+function featuExtrct(inDir,varargin)
 % 提取目录中所有图像的特征
+% F:\astego\特征CPP\锐化_Am1.0_HUGO_03\   2\  E:\featData\**.mat
 %%
-cDir= 'E:\astego\Images\standard_images\covers\';
-sDir = 'E:\astego\Images\StandExpers\czl4\';
-name= '195.pgm';
-cPath=[sDir,name];
+% cDir= 'E:\astego\Images\standard_images\covers\';
+% sDir = 'E:\astego\Images\StandExpers\czl4\';
+% name= '195.pgm';
+% cPath=[sDir,name];
+% F1= SRMProces(SRM(cpath), 0);
 % S_CZL4_SRM_04 = getFeatures(sDir, -1);
 
 %% 加载从C++程序中提取出来的特征数据
-clear;
-path1 = 'F:\astego\特征CPP\stegos\锐化_Am0.8_HUGO_03\';
-% path2 = 'E:\astego\特征CPP\锐化_Am0.8\2\';
-% path3 = 'E:\astego\特征CPP\HUGOOPT1_04\3\';
-% path4 = 'E:\astego\特征CPP\HUGOOPT1_04\4\';
+outPath = varargin{end};
+if(nargin==2)
+  Feat = LoadFeature(inDir); Feat.F=single(Feat.F);
+else
+  F=[]; names={};
+  for i=1:length(varargin)-1
+    dir1=[inDir,varargin{i}];
+    tmp = LoadFeature(dir1);
+    F=[F; tmp.F];
+    names=[names; tmp.names];
+  end
+  Feat.F=F; Feat.names=names;
+  clear F names;
+end
 
-F1 = LoadFeature(path1);
-% F2 = LoadFeature(path2);
-% F3 = LoadFeature(path3);
-% F4 = LoadFeature(path4);
+% path1 = 'F:\astego\特征CPP\SUNWD_0.1\';
+% F1 = LoadFeature(path1);
+% Feat.names= F.names;  Feat.F= single(F.F);
 
-S_SharpAm08_HUGO_03SRM.names= F1.names;
-S_SharpAm08_HUGO_03SRM.F= single(F1.F);
-clear F1 F2 F3 F4;
-[S_SharpAm08_HUGO_03SRM.names, ind]= sort(S_SharpAm08_HUGO_03SRM.names);
-S_SharpAm08_HUGO_03SRM.F = S_SharpAm08_HUGO_03SRM.F(ind, :);
-save('S_SharpAm08_HUGO_03SRM', 'S_SharpAm08_HUGO_03SRM');
-%}
+[Feat.names, ind]= sort(Feat.names);
+Feat.F = Feat.F(ind, :);
+save(outPath, 'Feat');

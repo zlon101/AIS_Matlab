@@ -4,8 +4,8 @@ function embedInRoot(coverRoot,stegoRoot,payLoad,startInd,endInd)
 % stegRoot      输出载密图像目录
 % numSample:    设置样本个数
 
-coverRoot = 'E:\astego\StandExpers\covers\';
-stegoRoot = 'E:\astego\StandExpers\CZL\';
+% coverRoot = 'E:\astego\StandExpers\covers\';
+% stegoRoot = 'E:\astego\StandExpers\CZL\';
 format = 'pgm';
 dirs  = dir([coverRoot,'*.',format]);
 nImages = length(dirs);
