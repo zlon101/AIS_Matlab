@@ -12,7 +12,7 @@ function featuExtrct(inDir,varargin)
 %% 加载从C++程序中提取出来的特征数据
 outPath = varargin{end};
 if(nargin==2)
-  Feat = LoadFeature(inDir); Feat.F=single(Feat.F);
+  Feat = LoadFeature(inDir);
 else
   F=[]; names={};
   for i=1:length(varargin)-1
@@ -24,6 +24,7 @@ else
   Feat.F=F; Feat.names=names;
   clear F names;
 end
+Feat.F=single(Feat.F);
 
 % path1 = 'F:\astego\特征CPP\SUNWD_0.1\';
 % F1 = LoadFeature(path1);
