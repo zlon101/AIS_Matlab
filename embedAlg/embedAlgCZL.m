@@ -1,11 +1,9 @@
 function stego=embedAlgCZL(I,payload)
 % 失真函数设计
 %%
-if(ischar(I))
-	I = single(imread(I));
-end
-[rhoP1,rhoM1] = CostCZL_mex(I);
-% [rhoP1,rhoM1] = CostUNWDOpt(I);
+I = single(imread(I));
+[rhoP1,rhoM1] = HILLOpt(I);
+% [rhoP1,rhoM1] = CostCZL_7(I);
 
 % P1=1./rhoP1;  M1=1./rhoM1; stego=1;
 % figure;histogram(P1);
@@ -44,24 +42,20 @@ for row=1:size(cover, 1)
     arrDV=[CrezV(row:row+t, col+2);
            CrezV(row:row+t, col+4)];
     rezV = CrezV(row:row+t, col+3);
-    % CZL08
-    DCover = norm( reshape([arrDH;a*rezH],[],1) )+...
-             norm( reshape([arrDV;a*rezV],[],1) );
-    DCover=0.5*DCover;
-    rhoP1(row,col)=1./(DCover+1e-20);
-    % CZL6
-    %DCover= sum(sum(abs( [arr; a*rez] ))) +1e-20;
-    %DM1 = sum(sum(abs( [arr; a*(rez-responseP1)] )));
-    %DP1 = sum(sum(abs( [arr; a*(rez+responseP1)] )));
-    %rhoP1(row,col)= exp(DP1-DCover) ./DCover;
-    %rhoM1(row,col)= exp(DM1-DCover) ./DCover;
+    % CZL_7
+    DCover = norm( reshape([arrDH;a*rezH],[],1) );
+    rhoP1(row,col)= 1./(DCover+1e-20);
+    
+    % CZL_8
+    %DCover = norm( reshape([arrDH;a*rezH],[],1) )+ norm( reshape([arrDV;a*rezV],[],1) );
+    %DCover=0.5*DCover;
+    %rhoP1(row,col)=1./(DCover+1e-20);
   end
 end
 % 平滑滤波
-% rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
 L= ones(9);
-rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
-% rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
+% rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
+rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
 rhoM1= rhoP1;
 
 rhoM1(rhoM1>wetCost) = wetCost;
@@ -184,7 +178,7 @@ rhoM1(cover==0) = wetCost; % do not embed -1 if the pixel has min value
 end
 
 %% HILL
-function [rhoP1,rhoM1]=HILLSUB(I)
+function [rhoP1,rhoM1]=HILLOpt(I)
 HFilter = [-1, 2, -2, 2,-1;
            2,-6,  8,-6, 2;
           -2, 8,-12, 8,-2;
@@ -194,11 +188,12 @@ HF2 = [1,2,1;2,-12,2;1,2,1];
 KB = [-1,2,-1; 2,-4,2; -1,2,-1];
 L1= ones(3);
 L2 = ones(15);
-% L2=[1,2,1;2,4,2;1,2,1];
 
 Y1 = imfilter(I, KB,'symmetric','same');
 Y2 = imfilter(abs(Y1), L1,'symmetric','same')./sum(L1(:));
-Cost = imfilter(Y2.^-1, L2,'symmetric','same')./sum(L2(:));
+% 滤波平滑
+Cost = imfilter((Y2+1e-20).^-1, L2,'symmetric','same')./sum(L2(:));
+Cost = ordfilt2(Cost, 121, true(11), 'symmetric');
 
 wetCost = 10^8;
 Cost(Cost > wetCost) = wetCost;
