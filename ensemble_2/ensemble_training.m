@@ -558,7 +558,7 @@ end
 warning('on','MATLAB:nearlySingularMatrix');
 warning('on','MATLAB:singularMatrix');
 if length(sigCS)~=length(sigC)
-    fprintf('\n\n-----ensemble_training.m length(sigCS)~=length(sigC)------\n\n');
+    % fprintf('\n\n-----ensemble_training.m length(sigCS)~=length(sigC)------\n\n');
     % pause;
     % resolve previously found NaN values, set the corresponding elements of w equal to zero
     w_new = zeros(length(sigC),1);
