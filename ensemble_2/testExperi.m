@@ -12,5 +12,5 @@ num_testing_samples = size(FC,1)+size(FS,1);
 PFA = false_alarms / size(FC, 1);
 PMD = missed_detections / size(FS,1);
 PE = (PFA+PMD) / 2;
-fprintf('PE: %.4f\n',PE);
+fprintf('PE: %.4f  PFA: %.4f  PMD: %.4f\n',PE,PFA,PMD);
 end

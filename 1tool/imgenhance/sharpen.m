@@ -7,7 +7,7 @@ if(ischar(imgData))
 end
 [t, ~] = wiener2(imgData, [3, 3]);
 HF = imgData - t;
-T = 8; HF(HF>T)=T; HF(HF<-1*T)=-1*T;
+T = 3; HF(HF>T)=T; HF(HF<-1*T)=-1*T; % ԭT=8;
 HF = round(HF * Amplitude);
 imgData = imgData + HF;
 imgData(imgData<0) = 0;  imgData(imgData>255) = 255;

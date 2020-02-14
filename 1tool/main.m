@@ -11,8 +11,7 @@ srcStegoData = HUGO_like(uint8(srcData), payLoad);
 imwrite(uint8(srcStegoData),srcStegoPath, 'pgm');
 % Èñ»¯
 Am = 1;
-% [sharpedData, HF] = sharpen(srcData, Am);
-[dstImg,HF] =  imgLaplace(srcData, Am);
+[sharpedData, HF] = sharpen(srcData, Am);
 % D= sharpedData-srcData; D(D==0)=NaN; figure;histogram(D);
 % ÒþÐ´
 sharpedStegoData = HUGO_like(uint8(sharpedData), payLoad);

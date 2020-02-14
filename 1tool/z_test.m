@@ -1,27 +1,27 @@
 function z_test()
-srcRoot = 'E:\astego\Images\standard_test_images\bmp\';
-dstRoot = 'E:\astego\Images\standard_test_images\pgm\';
+srcRoot = 'E:\astego\Images\standard_images\tif\';
+dstRoot = 'E:\astego\Images\standard_images\bmp\';
 numSample = -1;
 
-imgFiles  = dir([srcRoot, '*.bmp']);
+imgFiles  = dir([srcRoot, '*.tif']);
 Names=cell(length(imgFiles),1);
-if (~exist('numSample', 'var') || numSample<1)
-    numSample=length(imgFiles);
-end
 nImages = length(imgFiles);
+if (~exist('numSample', 'var') || numSample<1)
+  numSample=nImages;
+end
 old='';
 for i = 1:nImages
-    Names{i}=imgFiles(i).name;
-    src = imread([srcRoot,Names{i}]);
-    name = split(Names{i},'.');  name = name{1};
-    imwrite(src, [dstRoot,name,'.pgm'], 'pgm');
-    % ´òÓ¡
-    msg=sprintf('- count: %3d/%d',i,numSample);
-    fprintf([repmat('\b',1,length(old)),msg]);
-    old=msg;    
-    if i>=numSample
-        break;
-    end
+  Names{i}=imgFiles(i).name;
+  src = imread([srcRoot,Names{i}]);
+  name = split(Names{i},'.');  name = name{1};
+  imwrite(src(:,:,1), [dstRoot,name,'.bmp'], 'bmp');
+  % ´òÓ¡
+  msg=sprintf('- count: %3d/%d',i,numSample);
+  fprintf([repmat('\b',1,length(old)),msg]);
+  old=msg;    
+  if i>=numSample
+      break;
+  end
 end
 end
 
