@@ -2,8 +2,8 @@ function stego=embedAlgCZL(I,payload)
 % 失真函数设计
 %%
 I = single(imread(I));
-[rhoP1,rhoM1] = HILLOpt(I);
-% [rhoP1,rhoM1] = CostCZL_7(I);
+[rhoP1,rhoM1]= CostHUGO_like_mex(I);
+% [rhoP1,rhoM1] = CostCZL09_mex(I);
 
 % P1=1./rhoP1;  M1=1./rhoM1; stego=1;
 % figure;histogram(P1);
@@ -18,44 +18,48 @@ function [rhoP1,rhoM1] = CostCZL(cover)
 %% 
 cover = single(cover);
 wetCost = 10^8;
-responseP1 = [-1, 1;];
-% responseP1 = [0; 0; -1; +1; 0; 0];
 
 % create mirror padded cover image
 padSize = double(3);
-coverPadded = padarray(cover, [padSize,padSize], 'symmetric');
+cPadded = padarray(cover, [padSize,padSize], 'symmetric');
 % create residuals
-CrezH = coverPadded(:, 1:end-1) - coverPadded(:, 2:end);
-CrezV = coverPadded(1:end-1, :) - coverPadded(2:end, :);
-% CrezD = coverPadded(1:end-1, 1:end-1) - coverPadded(2:end, 2:end);
-% CrezMD = coverPadded(1:end-1, 2:end) - coverPadded(2:end, 1:end-1);
+rezH = (cPadded(:, 1:end-1) - cPadded(:, 2:end)).^2;
+rezV = (cPadded(1:end-1, :) - cPadded(2:end, :)).^2;
+% rezD = cPadded(1:end-1, 1:end-1) - cPadded(2:end, 2:end);
+% rezMD = cPadded(1:end-1, 2:end) - cPadded(2:end, 1:end-1);
 
 rhoM1 = zeros(size(cover),'single');  % declare cost of -1 change           
 rhoP1 = zeros(size(cover),'single');  % declare cost of +1 change
-t =1; a=2; % 滤波器阶数 & 权重
+T =3; a=2; % 滤波器阶数 & 权重, T=3,5,7
+T=(T-1)*0.5;
+cH=1; cV=1;
 for row=1:size(cover, 1)
+  r=row+3;
   for col=1:size(cover, 2)
-    % Horizontal
-    arrDH=[CrezH(row+2, col:col+t);
-           CrezH(row+4, col:col+t)];
-    rezH = CrezH(row+3, col:col+t);
-    arrDV=[CrezV(row:row+t, col+2);
-           CrezV(row:row+t, col+4)];
-    rezV = CrezV(row:row+t, col+3);
-    % CZL_7
-    DCover = norm( reshape([arrDH;a*rezH],[],1) );
-    rhoP1(row,col)= 1./(DCover+1e-20);
-    
+    c=col+3; % padSize=3;
+    % T=3
+    arrH= [rezH(r-1, c-T:c+T-1);
+           rezH(r,   c-T:c+T-1).*a;
+           rezH(r+1, c-T:c+T-1)];
+    arrV= [rezV(r-T:r+T-1, c-1);
+           rezV(r-T:r+T-1, c).*a;
+           rezV(r-T:r+T-1, c+1)];     
     % CZL_8
     %DCover = norm( reshape([arrDH;a*rezH],[],1) )+ norm( reshape([arrDV;a*rezV],[],1) );
     %DCover=0.5*DCover;
     %rhoP1(row,col)=1./(DCover+1e-20);
+    
+    % CZL7
+    %DCover = norm( reshape([arrDH;a*rezH],[],1) );
+    %rhoP1(row,col)= 1./(DCover+1e-20);
   end
 end
+
 % 平滑滤波
 L= ones(9);
-% rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
+% rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
+
 rhoM1= rhoP1;
 
 rhoM1(rhoM1>wetCost) = wetCost;

@@ -10,7 +10,7 @@ nImages = length(dirs);
 if(exist('payLoad','var') && str2double(payLoad)>0)
   payLoad = single(str2double(payLoad));
 else
-  payLoad = single(0.1);
+  payLoad = single(0.4);
 end
 if(exist('startInd','var') && str2double(startInd)>0)
   startInd = single(str2double(startInd));
@@ -24,7 +24,7 @@ else
 end
 
 % names=cell(length(dirs),1);
-fprintf('# start, count: %d - %d\npayload: %d\n',startInd,endInd,payLoad);
+fprintf('# count: %d - %d\npayload: %.1f\n',startInd,endInd,payLoad);
 
 old=''; t0 = datetime('now');
 for i=startInd : endInd

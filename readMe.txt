@@ -2,7 +2,7 @@
 
 M文件编译为MEX：coder
 M文件编译为EXE: 
-  1. mcc -m **.mcc
+  1. mcc -m **.m
   2. App-->App Compiler
   
 编译环境:

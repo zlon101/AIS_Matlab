@@ -43,12 +43,10 @@ TST_stego = S(testing_set,:);
 % bootstrap samples) are initialized randomly.
 % 'd_sub', 1600, 
 settings = struct('verbose',2); % 针对SRM特征设置d_sub=1600
-t0=datetime('now');
 [trained_ensemble, results]= ensemble_training(TRN_cover,TRN_stego,settings);
-fprintf('\n训练时间:'); disp(datetime('now')-t0);
-save('trained_ensemble.mat','trained_ensemble');
-save('results.mat','results');
-a=1;
+% save('trained_ensemble.mat','trained_ensemble');
+% save('results.mat','results');
+
 % Resulting trained classifier is a cell array containing individual base
 % learners. Variable 'results' contains some additional information like
 % optimal found parameters or the progress of the OOB error during the
@@ -78,7 +76,7 @@ title('Progress of the OOB error estimate');
 % value is an optimistic estimate of the real testing error.
 
 %% Testing phase
-%{
+%
 test_results_cover = ensemble_testing(TST_cover,trained_ensemble);
 test_results_stego = ensemble_testing(TST_stego,trained_ensemble);
 

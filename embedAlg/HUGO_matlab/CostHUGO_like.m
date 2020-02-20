@@ -1,4 +1,4 @@
-function [rhoP1,rhoM1] = CostHUGO_like(coverImg)
+function [rhoP1,rhoM1] = CostHUGO_like(cover)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
@@ -6,7 +6,7 @@ function [rhoP1,rhoM1] = CostHUGO_like(coverImg)
 cH=1; cV=1;
 params.gamma = 1;
 params.sigma = 1;
-cover = single(coverImg);
+cover = single(cover);
 wetCost = 10^8;
 responseP1 = [0; 0; -1; +1; 0; 0];
 
@@ -66,7 +66,11 @@ for row=1:size(cover, 1)
 end
 % clear S_Rez_H S_Rez_V S_Rez_Diag S_Rez_MDiag C_Rez_H C_Rez_V C_Rez_Diag;
 
-% truncation of the costs
+% 平滑滤波
+L= ones(9);
+rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
+rhoM1= imfilter(rhoM1, L,'symmetric','conv','same')./sum(L(:));
+
 rhoM1(rhoM1>wetCost) = wetCost;
 rhoP1(rhoP1>wetCost) = wetCost;
 rhoP1(cover == 255) = wetCost;
