@@ -1,8 +1,9 @@
 function embedInRoot(cRoot,sRoot,payLoad,startInd,endInd)
 % 根据隐写算法对目录中的图像进行隐写
 %%
-% coverRoot = 'E:\astego\StandExpers\covers\';
-% stegoRoot = 'E:\astego\StandExpers\CZL\';
+cRoot= 'E:\astego\Images\BOSS_ALL\';
+% cRoot = 'E:\astego\StandExpers\covers\';
+% sRoot = 'E:\astego\StandExpers\CZL\';
 format = 'pgm';
 dirs  = dir([cRoot,'*.',format]);
 nImgs = length(dirs);

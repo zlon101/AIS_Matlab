@@ -8,7 +8,7 @@ stego = EmbeddingSimulator(I, single(rhoP1), single(rhoM1), payload*numel(I), fa
 end
 
 %% HUGO
-function [rhoP1,rhoM1] = CostCZL(cover)
+function [rhoP1,rhoM1] = Cost_CZL(cover)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 

@@ -16,10 +16,10 @@ rezD = cPadded(1:end-1, 1:end-1) - cPadded(2:end, 2:end);
 rezMD= cPadded(1:end-1, 2:end) - cPadded(2:end, 1:end-1);
 %}
 
-rhoM1 = zeros(size(cover),'single');  % declare cost of -1 change           
-rhoP1 = zeros(size(cover),'single');  % declare cost of +1 change
-T= 5; T=(T-1)*0.5;  % 滤波器阶数 & 权重, T=3,5,7
+T= 5; G=(T-1)*0.5;  % 滤波器阶数 & 权重, T=3,5,7
 cH=1; cV=1;
+rhoM1 = zeros(size(cover),'single');
+rhoP1 = zeros(size(cover),'single');
 for row=1:size(cover, 1)
   r=row+3;
   for col=1:size(cover, 2)
@@ -41,8 +41,10 @@ for row=1:size(cover, 1)
     %}
     
     % CZL7
+    %{
     %DCover = norm( reshape([arrDH;a*rezH],[],1) );
     %rhoP1(row,col)= 1./(DCover+1e-20);
+    %}
   end
 end
 
