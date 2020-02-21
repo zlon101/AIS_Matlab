@@ -2,11 +2,7 @@ function stego=embedAlgCZL(I,payload)
 % 失真函数设计
 %%
 I = single(imread(I));
-[rhoP1,rhoM1]= CostHUGO_like_mex(I);
-% [rhoP1,rhoM1] = CostCZL09_mex(I);
-
-% P1=1./rhoP1;  M1=1./rhoM1; stego=1;
-% figure;histogram(P1);
+[rhoP1,rhoM1] = CostCZL(I);
 
 stego = EmbeddingSimulator(I, single(rhoP1), single(rhoM1), payload*numel(I), false);
 end
@@ -66,6 +62,16 @@ rhoM1(rhoM1>wetCost) = wetCost;
 rhoP1(rhoP1>wetCost) = wetCost;
 rhoP1(cover == 255) = wetCost;
 rhoM1(cover == 0) = wetCost;
+
+%{
+t =1; a=2; % 滤波器阶数 & 权重
+for row=1:size(cover, 1)
+  for col=1:size(cover, 2)
+    % Horizontal
+    arrDH=[CrezH(row+2, col:col+t);
+           CrezH(row+4, col:col+t)];
+    rezH = CrezH(row+3, col:col+t);
+%}
 end
 
 %% SUNWD

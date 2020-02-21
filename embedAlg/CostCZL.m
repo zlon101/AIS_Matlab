@@ -9,10 +9,12 @@ wetCost = 10^8;
 padSize = double(3);
 cPadded = padarray(cover, [padSize,padSize], 'symmetric');
 % create residuals
+%{
 rezH = cPadded(:, 1:end-1)- cPadded(:, 2:end);
 rezV = cPadded(1:end-1, :)- cPadded(2:end, :);
 rezD = cPadded(1:end-1, 1:end-1) - cPadded(2:end, 2:end);
 rezMD= cPadded(1:end-1, 2:end) - cPadded(2:end, 1:end-1);
+%}
 
 rhoM1 = zeros(size(cover),'single');  % declare cost of -1 change           
 rhoP1 = zeros(size(cover),'single');  % declare cost of +1 change
