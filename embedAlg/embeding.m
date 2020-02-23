@@ -4,8 +4,8 @@ cover= single(imread(cpath));
 
 % correl(data);
 % [rhoP1,~] = CostCZL(cover);
-[stego,rhoP1]=CostCZL_mex(cover);
+[stego,rhoP1]=CostCZL(cover,'9');
 
-% P = 1./rhoP1;
-% figure;histogram(P);
-% figure; imshow(P,[]);
+P = 1./rhoP1;
+figure;histogram(P);
+figure; imshow(P,[]);

@@ -1,4 +1,4 @@
-function [rhoP1,rhoM1] = CostCZL(cover)
+function [rhoP1,rhoM1] = CostCZL(cover, TFilter)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
@@ -31,7 +31,7 @@ for i=1:nBlockH
 end
 
 %% distortion cost
-T= 3; G=(T-1)*0.5;  % 滤波器阶数 & 权重, T=3,5,7
+T= 3; G=(T-1)*0.5;  % T阶领域, T=3,5,7
 % cH=1; cV=1;
 rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
@@ -68,7 +68,9 @@ for row=1:size(cover, 1)
 end
 
 % 平滑滤波
-L= ones(9);
+% TFilter = 9;
+TFilter= str2double(TFilter);
+L= ones(TFilter);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
 % rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
 

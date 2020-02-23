@@ -1,4 +1,4 @@
-function embedInRoot(cRoot,sRoot,payLoad,startInd,endInd)
+function embedInRoot(cRoot,sRoot,payLoad,startInd,endInd,TFilter)
 % 根据隐写算法对目录中的图像进行隐写
 %%
 % cRoot= 'E:\astego\Images\BOSS_ALL\';
@@ -35,7 +35,7 @@ for i=startInd : endInd
   cPath=[cRoot,names{i}];
   
   % 嵌入算法
-  stego = embedAlgCZL(cPath, payLoad);
+  stego = embedAlgCZL(cPath, payLoad, TFilter);
   imwrite(uint8(stego), [sRoot,names{i}],format);
   %stego=embedAlgCZL(cPath, payLoad);
   %stego = MiPOD( single(imread(cPath)), payLoad);
