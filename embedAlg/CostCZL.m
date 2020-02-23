@@ -4,7 +4,6 @@ function [rhoP1,rhoM1] = CostCZL(cover)
 %% 
 cover = single(cover);
 wetCost = 10^8;
-
 % create mirror padded cover image
 padSize = double(3);
 cPadded = padarray(cover, [padSize,padSize], 'symmetric');
@@ -16,7 +15,7 @@ rezD = cPadded(1:end-1, 1:end-1) - cPadded(2:end, 2:end);
 rezMD= cPadded(1:end-1, 2:end) - cPadded(2:end, 1:end-1);
 %}
 
-T= 5; G=(T-1)*0.5;  % 滤波器阶数 & 权重, T=3,5,7
+T= 3; G=(T-1)*0.5;  % 滤波器阶数 & 权重, T=3,5,7
 cH=1; cV=1;
 rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
@@ -24,14 +23,17 @@ for row=1:size(cover, 1)
   r=row+3;
   for col=1:size(cover, 2)
     c=col+3; % padSize=3;
-    % CZL09 T=5
-    %
-    subH= 2.* rezH(r, c-T:c+T-1);
-    subV= 2.* rezV(r-T:r+T-1, c);
-    subD= [rezD(r-2,c-2); rezD(r-1,c-1); rezD(r,c); rezD(r+1,c+1);];
-    subMD=[rezMD(r-2,c+1); rezMD(r-1,c); rezMD(r,c-1); rezMD(r+1,c-2);];
-    rhoP1(row,col)= 1/(norm(subH(:))+ norm(subV(:))+ norm(subD(:))+ norm(subMD(:))+ 1e-20);
-    %}
+    rs= r-G:r+G; cs= (c-G:c+G)-2; %-2
+    
+    subMatri= cPadded(rs,cs);
+    resH= subMatri(:,1:end-1)-subMatri(:,2:end);
+    resV= subMatri(1:end-1,:)-subMatri(2:end,:);
+    
+    resH(G+1,:)= resH(G+1,:).* 2;
+    resV(:,G+1)= resV(:,G+1).* 2;
+    resH=resH(:); resV=resV(:);
+    
+    rhoP1(row,col)= 1/(cH*norm(resH)+ cV*norm(resV)+ 1);
     
     % CZL8 T=3
     %{
@@ -39,7 +41,6 @@ for row=1:size(cover, 1)
     subV= [rezV(r-T:r+T-1, c-1); 2.* rezV(r-T:r+T-1, c); rezV(r-T:r+T-1, c+1)];
     rhoP1(row,col)= 1/ (cH*norm(subH(:))+ cV*norm(subV(:))+ 1e-20);
     %}
-    
     % CZL7
     %{
     %DCover = norm( reshape([arrDH;a*rezH],[],1) );
