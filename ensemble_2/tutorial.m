@@ -42,7 +42,7 @@ TST_stego = S(testing_set,:);
 % the number of base learners (L), both PRNG seeds (for subspaces and
 % bootstrap samples) are initialized randomly.
 % 'd_sub', 1600, 
-settings = struct('verbose',2); % 针对SRM特征设置d_sub=1600
+settings = struct('verbose',2);
 [trained_ensemble, results]= ensemble_training(TRN_cover,TRN_stego,settings);
 % save('trained_ensemble.mat','trained_ensemble');
 % save('results.mat','results');
@@ -75,8 +75,9 @@ title('Progress of the OOB error estimate');
 % we used it as a feedback for determining d_sub and L. Therefore, its
 % value is an optimistic estimate of the real testing error.
 
+
 %% Testing phase
-%
+%{
 test_results_cover = ensemble_testing(TST_cover,trained_ensemble);
 test_results_stego = ensemble_testing(TST_stego,trained_ensemble);
 
@@ -90,12 +91,13 @@ PE = (PFA+PMD) / 2;
 fprintf('PE: %.4f  PFA: %.4f  PMD: %.4f\n',PE,PFA,PMD);
 %}
 
+
 %% 重复10次训练及测试
-%{
+%
 % To speed-up the following example, we fix d_sub to 300
 t0=datetime('now');
 PMD= zeros(10,1); PFA=zeros(10,1);
-d_sub = results.optimal_d_sub; % d_sub=1600;
+d_sub = results.optimal_d_sub;
 settings = struct('d_sub',d_sub,'verbose',2);
 for seed = 1:10
   RandStream.setGlobalStream(RandStream('mt19937ar','Seed',seed));

@@ -15,33 +15,15 @@ rezD = cPadded(1:end-1, 1:end-1) - cPadded(2:end, 2:end);
 rezMD= cPadded(1:end-1, 2:end) - cPadded(2:end, 1:end-1);
 %}
 
-%% 分割,计算不同方向的相关度
-gap= 128;
-nBlockH= size(cover,1)/gap; nBlockV=size(cover,2)/gap;
-rows= 0:gap:size(cover,1);
-cols= 0:gap:size(cover,2);
-cH= zeros(nBlockH,nBlockV); cV=zeros(nBlockH,nBlockV);
-for i=1:nBlockH
-  r= rows(i)+1 : rows(i+1);
-  for j=1:nBlockV
-    c= cols(j)+1 : cols(j+1);
-    subImg= cover(r, c);
-    [cH(i,j),cV(i,j)]= correl(subImg);
-  end
-end
-
-%% distortion cost
 T= 3; G=(T-1)*0.5;  % 滤波器阶数 & 权重, T=3,5,7
-% cH=1; cV=1;
+cH=1; cV=1;
 rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
 for row=1:size(cover, 1)
-  i=ceil(row/gap);
-  r= row+3;
+  r=row+3;
   for col=1:size(cover, 2)
-    j= ceil(col/gap);
     c=col+3; % padSize=3;
-    rs= r-G:r+G; cs= (c-G:c+G);% -2; %偏移
+    rs= r-G:r+G; cs= (c-G:c+G)-2; %偏移
     
     subMatri= cPadded(rs,cs);
     resH= subMatri(:,1:end-1)-subMatri(:,2:end);
@@ -51,7 +33,7 @@ for row=1:size(cover, 1)
     resV(:,G+1)= resV(:,G+1).* 2;
     resH=resH(:); resV=resV(:);
     
-    rhoP1(row,col)= 1/(cH(i,j)*norm(resH)+ cV(i,j)*norm(resV)+ 1);
+    rhoP1(row,col)= 1/(cH*norm(resH)+ cV*norm(resV)+ 1);
     
     % CZL8 T=3
     %{
