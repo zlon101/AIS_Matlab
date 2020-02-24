@@ -2,7 +2,7 @@ function stego=embedAlgCZL(I,payload,TFilter)
 % 失真函数设计
 %%
 I = single(imread(I));
-[rhoP1,rhoM1] = CostCZL(I, TFilter);
+[rhoP1,rhoM1] = CostCZLT15_mex(I, TFilter);
 
 stego = EmbeddingSimulator(I, single(rhoP1), single(rhoM1), payload*numel(I), false);
 end

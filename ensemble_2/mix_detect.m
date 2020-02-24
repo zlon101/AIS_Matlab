@@ -1,6 +1,6 @@
 %% 1000·שÔØÌוÍ¼Ïס×קÎ×Í¼Ïס¿ג
 n= 1000;
-C= C_BOSS_SRM; S= S_CZL8_04_SRM;
+C= C_BOSS_SRM; S= Feat;
 C2.names= C.names(1:n); C2.F= C.F(1:n,:);
 S2.names= S.names(1:n); S2.F= S.F(1:n,:);
 

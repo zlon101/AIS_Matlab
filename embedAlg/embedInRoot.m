@@ -1,7 +1,7 @@
 function embedInRoot(cRoot,sRoot,payLoad,startInd,endInd,TFilter)
 % 根据隐写算法对目录中的图像进行隐写
 %%
-% cRoot= 'E:\astego\Images\BOSS_ALL\';
+% cRoot= 'E:\astego\Images\BOSS_ALL\'; TFilter='9';
 % cRoot = 'E:\astego\StandExpers\covers\';
 % sRoot = 'E:\astego\StandExpers\CZL\';
 format = 'pgm';
@@ -30,12 +30,13 @@ else
 end
 
 fprintf('# count: %d - %d\npayload: %.1f\n',startInd,endInd,payLoad);
+fprintf('TFilter: %s\n',TFilter);
 old=''; t0 = datetime('now');
 for i=startInd : endInd
   cPath=[cRoot,names{i}];
   
   % 嵌入算法
-  stego = embedAlgCZL(cPath, payLoad, TFilter);
+  stego = embedAlgCZL(cPath, payLoad, str2double(TFilter));
   imwrite(uint8(stego), [sRoot,names{i}],format);
   %stego=embedAlgCZL(cPath, payLoad);
   %stego = MiPOD( single(imread(cPath)), payLoad);

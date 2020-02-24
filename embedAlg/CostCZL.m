@@ -68,8 +68,7 @@ for row=1:size(cover, 1)
 end
 
 % Æ½»¬ÂË²¨
-% TFilter = 9;
-TFilter= str2double(TFilter);
+% TFilter = 15;
 L= ones(TFilter);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
 % rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
