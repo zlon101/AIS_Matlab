@@ -5,7 +5,7 @@ C2.names= C.names(1:n); C2.F= C.F(1:n,:);
 S2.names= S.names(1:n); S2.F= S.F(1:n,:);
 
 PE = tutorial(C2, S2);
-clearvars -except PE C_BOSS_SRM;
+clearvars -except PE C_BOSS_SRM Feat;
 
 %{
 root='D:\Matlab2017b\bin\featureDatas\';

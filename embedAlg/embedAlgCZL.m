@@ -1,10 +1,15 @@
-function stego=embedAlgCZL(I,payload,TFilter)
+function stego=embedAlgCZL(cover,payload)
 % 失真函数设计
 %%
-I = single(imread(I));
-[rhoP1,rhoM1] = CostCZLT15_mex(I, TFilter);
+cover = single(imread(cover));
 
-stego = EmbeddingSimulator(I, single(rhoP1), single(rhoM1), payload*numel(I), false);
+[rhoP1,rhoM1] = CostCZL(cover);
+
+% 弥补
+% cover(optP1)=cover(optP1)+1;
+% cover(optM1)=cover(optM1)-1;
+
+stego = EmbeddingSimulator(cover, single(rhoP1), single(rhoM1), payload*numel(cover), false);
 end
 
 %% HUGO
@@ -74,6 +79,7 @@ for row=1:size(cover, 1)
 %}
 end
 
+%{
 %% SUNWD
 function [rhoP1,rhoM1] = CostUNWDOpt(coverImg)
 if(ischar(coverImg))
@@ -213,3 +219,4 @@ rhoM1 = Cost;
 rhoP1(I==255) = wetCost;
 rhoM1(I==0) = wetCost;
 end
+%}
