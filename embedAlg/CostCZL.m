@@ -1,4 +1,4 @@
-function [rhoP1,rhoM1,optP1,optM1] = CostCZL(cover)
+function [rhoP1,rhoM1] = CostCZL(cover)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
@@ -33,18 +33,17 @@ for i=1:nBlockH
 end
 %}
 %% distortion cost
-T= 3; G=(T-1)*0.5;  % T阶领域, T=3,5,7
-cH=1; cV=1;
+T= 5; G=(T-1)*0.5;  % T阶领域, T=3,5,7
+a=1; cH=1; cV=1; 
 rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
-optP1= zeros(size(cover),'logical');
-optM1= zeros(size(cover),'logical');
+% optP1= zeros(size(cover),'logical'); optM1= zeros(size(cover),'logical');
 for row=1:size(cover, 1)
   i=ceil(row/gap);
   r= row+3;
   for col=1:size(cover, 2)
     j= ceil(col/gap);
-    c=col+3; % padSize=3;
+    c=col+3;
     rs= r-G:r+G; cs= (c-G:c+G); % -2; %偏移
     subMatri= cPadded(rs,cs);
 
@@ -52,8 +51,8 @@ for row=1:size(cover, 1)
     resH= subMatri(:,1:end-1)-subMatri(:,2:end);
     resV= subMatri(1:end-1,:)-subMatri(2:end,:);
     
-    resH(G+1,:)= resH(G+1,:).* 2;
-    resV(:,G+1)= resV(:,G+1).* 2;
+    resH(G+1,:)= resH(G+1,:).* a;
+    resV(:,G+1)= resV(:,G+1).* a;
     resH=resH(:); resV=resV(:);
     
     rhoP1(row,col)= 1/(min(norm(resH),norm(resV)) +  1);
@@ -81,8 +80,8 @@ for row=1:size(cover, 1)
     %DCover = norm( reshape([arrDH;a*rezH],[],1) );
     %rhoP1(row,col)= 1./(DCover+1e-20);
     %}
-    
     % 弥补嵌入, 嵌入后的相关度更高
+    %{
     vcenter=subMatri(G+1,G+1);
     subMatri(G+1,G+1)=nan; 
     subMatri(1,1)=nan; subMatri(1,end)=nan; 
@@ -95,6 +94,7 @@ for row=1:size(cover, 1)
         optP1(row,col)=1;
       end
     end
+    %}
   end
 end
 
@@ -102,7 +102,6 @@ end
 TFilter = 9;
 L= ones(TFilter);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
-% rhoM1= imfilter(rhoM1, L,'symmetric','conv','same')./sum(L(:));
 % rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
 
 rhoM1= rhoP1;
@@ -112,8 +111,10 @@ rhoP1(cover == 255) = wetCost;
 rhoM1(cover == 0) = wetCost;
 
 %% 弥补 
+%{
 rhoP1(optP1)=min(rhoP1(:));
 rhoM1(optM1)=min(rhoM1(:));
+%}
 %{
   function resH=resHmatri(x)
     resH= x(:,1:end-1)- x(:,2:end);

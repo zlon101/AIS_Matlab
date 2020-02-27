@@ -2,12 +2,7 @@ function stego=embedAlgCZL(cover,payload)
 % 失真函数设计
 %%
 cover = single(imread(cover));
-
-[rhoP1,rhoM1] = CostCZL(cover);
-
-% 弥补
-% cover(optP1)=cover(optP1)+1;
-% cover(optM1)=cover(optM1)-1;
+[rhoP1,rhoM1] = T5A2(cover);
 
 stego = EmbeddingSimulator(cover, single(rhoP1), single(rhoM1), payload*numel(cover), false);
 end
