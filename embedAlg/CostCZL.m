@@ -2,7 +2,7 @@ function [rhoP1,rhoM1] = CostCZL(cover)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
-% disp('CZL7-Max!');
+% disp('CZL7!');
 cover = single(cover);
 wetCost = 10^8;
 % create mirror padded cover image
@@ -33,8 +33,10 @@ for i=1:nBlockH
 end
 %}
 %% distortion cost
-T= 5; G=(T-1)*0.5;  % T阶领域, T=3,5,7
-a=1; cH=1; cV=1; 
+a= 1;          %cH=1; cV=1; 
+TFilter = 13;
+T= 3; G=(T-1)*0.5;  % T阶领域, T=3,5,7
+
 rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
 % optP1= zeros(size(cover),'logical'); optM1= zeros(size(cover),'logical');
@@ -99,10 +101,10 @@ for row=1:size(cover, 1)
 end
 
 %% 平滑滤波
-TFilter = 9;
 L= ones(TFilter);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
-% rhoP1 = ordfilt2(rhoP1,81,true(9),'symmetric');
+imgaussfilt(I,sigma,'FilterSize',5,'Padding','symmetric','FilterDomain','spatial');
+% rhoP1 = ordfilt2(rhoP1,TFilter^2,true(TFilter),'symmetric');
 
 rhoM1= rhoP1;
 rhoM1(rhoM1>wetCost) = wetCost;
