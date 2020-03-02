@@ -34,9 +34,7 @@ end
 %}
 %% distortion cost
 a= 1;          %cH=1; cV=1; 
-TFilter = 13;
 T= 3; G=(T-1)*0.5;  % T阶领域, T=3,5,7
-
 rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
 % optP1= zeros(size(cover),'logical'); optM1= zeros(size(cover),'logical');
@@ -58,7 +56,6 @@ for row=1:size(cover, 1)
     resH=resH(:); resV=resV(:);
     
     rhoP1(row,col)= 1/(min(norm(resH),norm(resV)) +  1);
-    %rhoP1(row,col)= 1/(cH*norm(resH) + cV*norm(resV)+ 1);
     %}
     
     %非对称嵌入; rhoP1!=rhoM1;
@@ -82,28 +79,14 @@ for row=1:size(cover, 1)
     %DCover = norm( reshape([arrDH;a*rezH],[],1) );
     %rhoP1(row,col)= 1./(DCover+1e-20);
     %}
-    % 弥补嵌入, 嵌入后的相关度更高
-    %{
-    vcenter=subMatri(G+1,G+1);
-    subMatri(G+1,G+1)=nan; 
-    subMatri(1,1)=nan; subMatri(1,end)=nan; 
-    subMatri(end,1)=nan; subMatri(end,end)=nan; 
-    x=sort(subMatri(:));
-    if( var(x(1:end-5))==0)
-      if(vcenter-x(1)>1)
-        optM1(row,col)=1;
-      elseif(vcenter-x(1)<-1)
-        optP1(row,col)=1;
-      end
-    end
-    %}
   end
 end
 
 %% 平滑滤波
-L= ones(TFilter);
+TFilter = 13;  L= ones(TFilter);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
-imgaussfilt(I,sigma,'FilterSize',5,'Padding','symmetric','FilterDomain','spatial');
+% sigma = 3.5; % sigma越大,越接近均值 FSize=2*ceil(2*sigma)+1
+% rhoP1=imgaussfilt(rhoP1,sigma,'Padding','symmetric');
 % rhoP1 = ordfilt2(rhoP1,TFilter^2,true(TFilter),'symmetric');
 
 rhoM1= rhoP1;
@@ -112,11 +95,6 @@ rhoP1(rhoP1>wetCost) = wetCost;
 rhoP1(cover == 255) = wetCost;
 rhoM1(cover == 0) = wetCost;
 
-%% 弥补 
-%{
-rhoP1(optP1)=min(rhoP1(:));
-rhoM1(optM1)=min(rhoM1(:));
-%}
 %{
   function resH=resHmatri(x)
     resH= x(:,1:end-1)- x(:,2:end);
