@@ -3,9 +3,9 @@ function [rhoP1,rhoM1] = CostCZL(cover)
 % 返回+1 -1 的代价
 %% 
 % disp('CZL7!');
-cover = single(cover);
 wetCost = 10^8;
-% create mirror padded cover image
+cover = single(cover);
+% [imgData,HF] = sharpen(imgData, Amplitude)
 padSize = double(3);
 cPadded = padarray(cover, [padSize,padSize], 'symmetric');
 % create residuals
@@ -17,8 +17,8 @@ rezMD= cPadded(1:end-1, 2:end) - cPadded(2:end, 1:end-1);
 %}
 
 %% 分割,计算不同方向的相关度
-gap= 64;
 %{
+gap= 64;
 nBlockH= size(cover,1)/gap; nBlockV=size(cover,2)/gap;
 rows= 0:gap:size(cover,1);
 cols= 0:gap:size(cover,2);
@@ -39,23 +39,37 @@ rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
 % optP1= zeros(size(cover),'logical'); optM1= zeros(size(cover),'logical');
 for row=1:size(cover, 1)
-  i=ceil(row/gap);
   r= row+3;
   for col=1:size(cover, 2)
-    j= ceil(col/gap);
     c=col+3;
     rs= r-G:r+G; cs= (c-G:c+G); % -2; %偏移
     subMatri= cPadded(rs,cs);
-
-    %对称嵌入; rhoP1=rhoM1;
+    % 残差
     resH= subMatri(:,1:end-1)-subMatri(:,2:end);
     resV= subMatri(1:end-1,:)-subMatri(2:end,:);
-    
+    resD= subMatri(1:end-1, 1:end-1)- subMatri(2:end, 2:end);
+    resMD=subMatri(1:end-1, 2:end)- subMatri(2:end, 1:end-1);
+
     resH(G+1,:)= resH(G+1,:).* a;
     resV(:,G+1)= resV(:,G+1).* a;
-    resH=resH(:); resV=resV(:);
-    
-    rhoP1(row,col)= 1/(min(norm(resH),norm(resV)) +  1);
+    resH=resH(:); resV=resV(:); resD=resD(:); resMD=resMD(:);
+    %resH=resH(G+1,:); resV=resV(:,G+1);
+
+    %增加对角
+    %{
+    resMD=[subMatri(1,1)-subMatri(2,2);
+           subMatri(2,2)-subMatri(3,3);
+           subMatri(3,3)-subMatri(4,4);
+           subMatri(4,4)-subMatri(5,5);];
+    resD= [subMatri(1,5)-subMatri(2,4);
+           subMatri(2,4)-subMatri(3,3);
+           subMatri(3,3)-subMatri(4,2);
+           subMatri(4,2)-subMatri(5,1);];
+    resD=resD(:); resMD=resMD(:);
+    %rhoP1(row,col)= 1/(min([norm(resH),norm(resV),norm(resMD),norm(resD)]) +  1);
+    %}
+    x= [norm(resH); norm(resV) ; norm(resD); norm(resMD)]; %
+    rhoP1(row,col)= 1/(min(x)+ 1);
     %}
     
     %非对称嵌入; rhoP1!=rhoM1;
@@ -67,7 +81,6 @@ for row=1:size(cover, 1)
     rhoP1(row,col)= 1/(cH(i,j)*norm(resP1H) + cV(i,j)*norm(resP1V)+ 1);
     rhoM1(row,col)= 1/(cH(i,j)*norm(resM1H) + cV(i,j)*norm(resM1V)+ 1);
     %}
-    
     % CZL8 T=3
     %{
     subH= [rezH(r-1, c-T:c+T-1); 2.* rezH(r, c-T:c+T-1); rezH(r+1, c-T:c+T-1)];
@@ -83,9 +96,11 @@ for row=1:size(cover, 1)
 end
 
 %% 平滑滤波
-TFilter = 13;  L= ones(TFilter);
+TFilter = 13;
+L= ones(TFilter);  %L = fspecial('gaussian',TFilter,sigma);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
-% sigma = 3.5; % sigma越大,越接近均值 FSize=2*ceil(2*sigma)+1
+
+% sigma = 13; % sigma越大,越接近均值 FSize=2*ceil(2*sigma)+1
 % rhoP1=imgaussfilt(rhoP1,sigma,'Padding','symmetric');
 % rhoP1 = ordfilt2(rhoP1,TFilter^2,true(TFilter),'symmetric');
 

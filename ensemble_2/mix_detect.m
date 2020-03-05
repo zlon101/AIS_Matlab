@@ -1,5 +1,5 @@
 %% 1000·שÔØÌוÍ¼Ïס×קÎ×Í¼Ïס¿ג
-n= 1000;
+n= 2000;
 C= C_BOSS_SRM; S= Feat;
 
 C2.names= C.names(1:n); C2.F= C.F(1:n,:);

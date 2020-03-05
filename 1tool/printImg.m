@@ -1,5 +1,7 @@
 % ±£´æÍ¼Ïñ
 fig = gcf;
+figure1 = figure('OuterPosition',[1 1 487.333333333333 270.666666666667]);
+
 fig.WindowStyle='normal';
 fig.PaperPositionMode = 'manual';
 fig.Units =  'pixels';
