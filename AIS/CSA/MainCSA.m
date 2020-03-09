@@ -1,6 +1,5 @@
 function MainCSA(coverRoot, startInd, endInd,saveRoot)
-% startInd='1'; 
-endInd='1';
+% startInd='1'; endInd='1';
 coverRoot = 'E:\astego\Images\BOSS_ALL\';
 payload = single(0.4);
 if(~exist('saveRoot','var'))

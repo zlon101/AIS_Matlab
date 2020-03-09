@@ -1,8 +1,8 @@
-function embedInRoot(cRoot,sRoot,payLoad,startInd,endInd)
+function embedInRoot(sharpRoot,sRoot,payLoad,Am,startInd,endInd)
 % 根据隐写算法对目录中的图像进行隐写
 %%
-% cRoot= 'E:\astego\Images\BOSS_ALL\';
-% cRoot = 'E:\astego\StandExpers\covers\';
+% sharpRoot= 'E:\astego\Images\sharpImg\';
+cRoot= 'E:\astego\Images\BOSS_ALL\';
 % sRoot = 'E:\astego\StandExpers\CZL\';
 format = 'pgm';
 dirs  = dir([cRoot,'*.',format]);
@@ -28,15 +28,16 @@ if(exist('endInd','var'))
 else 
   endInd=single(nImgs);
 end
-fprintf('# count: %d - %d\npayload: %.1f\n',startInd,endInd,payLoad);
+fprintf('# count: %d - %d\npayload: %.1f  Am: %.1f\n',...
+  startInd,endInd,payLoad,str2double(Am));
 
 old=''; t0 = datetime('now');
 for i=startInd : endInd
-  cPath=[cRoot,names{i}];
-  
-  % 嵌入算法
-  stego = embedAlgCZL(cPath, payLoad);
+  cPath= [cRoot,names{i}];
+  % embedAlg
+  [stego,sharpImg]= embedAlgCZL(cPath, payLoad, Am);
   imwrite(uint8(stego), [sRoot,names{i}],format);
+  imwrite(uint8(sharpImg), [sharpRoot,names{i}],format);
   %stego = MiPOD( single(imread(cPath)), payLoad);
   %stego = HILL(cPath, payLoad);
   %stego = HUGO_like(imread(cPath), payLoad);
@@ -45,7 +46,7 @@ for i=startInd : endInd
   % J_UNIWARD([coverRoot,Names{i}], [stegRoot,Names{i}], single(payLoad));
   %stego = MG( single(imread(cPath)), payLoad );
   
-  % 打印
+  % print
   msg=sprintf('- count: %3d/%d',i,nImgs);
   fprintf([repmat('\b',1,length(old)),msg]);
   old=msg;

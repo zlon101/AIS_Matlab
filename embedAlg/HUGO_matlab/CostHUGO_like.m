@@ -2,8 +2,6 @@ function [rhoP1,rhoM1] = CostHUGO_like(cover)
 % HUGO 代价函数
 % 返回+1 -1 的代价
 %% 
-% fprintf('\n---CostHUGO Matlab!----\n');
-cH=1; cV=1;
 params.gamma = 1;
 params.sigma = 1;
 cover = single(cover);
@@ -37,15 +35,15 @@ for row=1:size(cover, 1)
     stego_sub = S_Rez_H(row+3, col:col+5)';
     stego_sub_P1 = stego_sub + responseP1;
     stego_sub_M1 = stego_sub - responseP1;
-    D_M1 = D_M1 + GetLocalDistortion(cover_sub, stego_sub_M1, params) * cH;
-    D_P1 = D_P1 + GetLocalDistortion(cover_sub, stego_sub_P1, params) * cH;
+    D_M1 = D_M1 + GetLocalDistortion(cover_sub, stego_sub_M1, params);
+    D_P1 = D_P1 + GetLocalDistortion(cover_sub, stego_sub_P1, params);
     % Vertical
     cover_sub = C_Rez_V(row:row+5, col+3);
     stego_sub = S_Rez_V(row:row+5, col+3);
     stego_sub_P1 = stego_sub + responseP1;
     stego_sub_M1 = stego_sub - responseP1;
-    D_M1 = D_M1 + GetLocalDistortion(cover_sub, stego_sub_M1, params) * cV;
-    D_P1 = D_P1 + GetLocalDistortion(cover_sub, stego_sub_P1, params) * cV;
+    D_M1 = D_M1 + GetLocalDistortion(cover_sub, stego_sub_M1, params);
+    D_P1 = D_P1 + GetLocalDistortion(cover_sub, stego_sub_P1, params);
     % Diagonal
     cover_sub = [C_Rez_Diag(row, col); C_Rez_Diag(row+1, col+1); C_Rez_Diag(row+2, col+2); C_Rez_Diag(row+3, col+3); C_Rez_Diag(row+4, col+4); C_Rez_Diag(row+5, col+5)];
     stego_sub = [S_Rez_Diag(row, col); S_Rez_Diag(row+1, col+1); S_Rez_Diag(row+2, col+2); S_Rez_Diag(row+3, col+3); S_Rez_Diag(row+4, col+4); S_Rez_Diag(row+5, col+5)];
@@ -61,7 +59,11 @@ for row=1:size(cover, 1)
     D_M1 = D_M1 + GetLocalDistortion(cover_sub, stego_sub_M1, params);
     D_P1 = D_P1 + GetLocalDistortion(cover_sub, stego_sub_P1, params);
     rhoM1(row, col) = D_M1;
-    rhoP1(row, col) = D_P1;            
+    rhoP1(row, col) = D_P1;
   end
 end
 % clear S_Rez_H S_Rez_V S_Rez_Diag S_Rez_MDiag C_Rez_H C_Rez_V C_Rez_Diag;
+rhoM1(rhoM1>wetCost) = wetCost;
+rhoP1(rhoP1>wetCost) = wetCost;
+rhoP1(cover == 255) = wetCost;
+rhoM1(cover == 0) = wetCost;

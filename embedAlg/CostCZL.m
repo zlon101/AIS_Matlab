@@ -5,7 +5,6 @@ function [rhoP1,rhoM1] = CostCZL(cover)
 % disp('CZL7!');
 wetCost = 10^8;
 cover = single(cover);
-% [imgData,HF] = sharpen(imgData, Amplitude)
 padSize = double(3);
 cPadded = padarray(cover, [padSize,padSize], 'symmetric');
 % create residuals
@@ -47,12 +46,12 @@ for row=1:size(cover, 1)
     % 残差
     resH= subMatri(:,1:end-1)-subMatri(:,2:end);
     resV= subMatri(1:end-1,:)-subMatri(2:end,:);
-    resD= subMatri(1:end-1, 1:end-1)- subMatri(2:end, 2:end);
-    resMD=subMatri(1:end-1, 2:end)- subMatri(2:end, 1:end-1);
+    %resD= subMatri(1:end-1, 1:end-1)- subMatri(2:end, 2:end);
+    %resMD=subMatri(1:end-1, 2:end)- subMatri(2:end, 1:end-1);
 
     resH(G+1,:)= resH(G+1,:).* a;
     resV(:,G+1)= resV(:,G+1).* a;
-    resH=resH(:); resV=resV(:); resD=resD(:); resMD=resMD(:);
+    resH=resH(:); resV=resV(:); % resD=resD(:); resMD=resMD(:);
     %resH=resH(G+1,:); resV=resV(:,G+1);
 
     %增加对角
@@ -68,7 +67,7 @@ for row=1:size(cover, 1)
     resD=resD(:); resMD=resMD(:);
     %rhoP1(row,col)= 1/(min([norm(resH),norm(resV),norm(resMD),norm(resD)]) +  1);
     %}
-    x= [norm(resH); norm(resV) ; norm(resD); norm(resMD)]; %
+    x= [norm(resH); norm(resV)]; % ; norm(resD); norm(resMD)
     rhoP1(row,col)= 1/(min(x)+ 1);
     %}
     
@@ -96,7 +95,7 @@ for row=1:size(cover, 1)
 end
 
 %% 平滑滤波
-TFilter = 13;
+TFilter = 11;
 L= ones(TFilter);  %L = fspecial('gaussian',TFilter,sigma);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
 
