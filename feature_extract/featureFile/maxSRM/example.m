@@ -33,7 +33,7 @@
 clc; clear all;
 
 % Specify all images for extraction
-I = imread('images\1.pgm');
+I = imread('E:\astego\Images\BOSS_ALL\1.pgm');
 MAP = ones(size(I));
 
 %% --------------------

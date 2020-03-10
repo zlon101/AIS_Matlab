@@ -1,15 +1,19 @@
 %% 1000·ùÔØÌåÍ¼Ïñ×÷ÎªÍ¼Ïñ¿â
-n= 1000;
-% C= C_BOSS_SRM; 
-S= Feat;
+% n= 1000;
+% C= C_BOSS_SRM; S= Feat;
+% C2.names= C.names(1:n); C2.F= C.F(1:n,:);
+% S2.names= S.names(1:n); S2.F= S.F(1:n,:);
+% PE = tutorial(C2, S2);
+% clearvars -except PE C_BOSS_SRM;
 
-C2.names= C.names(1:n); C2.F= C.F(1:n,:);
-S2.names= S.names(1:n); S2.F= S.F(1:n,:);
+% -----------------------------------------------------
 
-PE = tutorial(C2, S2);
-clearvars -except PE C_BOSS_SRM;
+PE= unmatch_detect(C_BOSS_SRM.F, S_HUGO_05_SRM.F, C_BOSS_SRM.F, S_Sharp.F);
+clearvars -except C_BOSS_SRM;
+% -----------------------------------------------------
 
 %{
+% -----------------------------------------------------
 root='D:\Matlab2017b\bin\featureDatas\';
 % load([root,'covers\C_BOSS_SRM.mat']);
 % load([root,'S_MiPOD_04_SRM.mat']); 
@@ -40,4 +44,5 @@ S.F(b1+1:end,:) = S2.F(inds, :);
 clearvars -except C S;
 % fprintf('isequal: '); disp(isequal(C.names,sort(S.names)));
 [PE,PFA,PMD] = tutorial(C, S);
+% -----------------------------------------------------
 %}

@@ -1,7 +1,7 @@
 function [PE, PFA, PMD] = unmatch_detect(CTrn,STrn,CTst,STst)
 % ·ÇÆ¥Åä¼ì²â, ÔØÌå¿âÊ§Åä
-%{
-if(~isequal(CTrn,STrn))
+%
+if(~isequal(CTrn,CTst))
   disp('´íÎó');pause;
 end
 %}
@@ -9,7 +9,7 @@ end
 % load('trained_ensemble.mat');  load('results.mat');
 % d_sub = results.optimal_d_sub;
 settings= struct('verbose',2); % 'd_sub',d_sub,
-num= 1;  PMD= zeros(num,1); PFA=zeros(num,1);
+num= 10;  PMD= zeros(num,1); PFA=zeros(num,1);
 for seed = 1:num
   RandStream.setGlobalStream(RandStream('mt19937ar','Seed',seed));
   random_permutation = randperm(size(CTrn,1));
@@ -18,6 +18,7 @@ for seed = 1:num
   Tst_cover = CTst(testing_set,:);
   Tst_stego = STst(testing_set,:);
   [trained_ensemble,~]=ensemble_training(CTrn(training_set,:), STrn(training_set,:),settings);
+  
   test_results_cover = ensemble_testing(Tst_cover,trained_ensemble);
   test_results_stego = ensemble_testing(Tst_stego,trained_ensemble);
 
