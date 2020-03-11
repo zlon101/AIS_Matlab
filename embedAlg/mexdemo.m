@@ -5,4 +5,4 @@ payLoad = single(0.4);
 cover = single(imread([root,name]));
 
 %% าþะด
-% [rhoP1,rhoM1] = CostCZL(cover);
+[rhoP1,rhoM1] = CostCZL(cover);

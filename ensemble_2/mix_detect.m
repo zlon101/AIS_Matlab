@@ -1,15 +1,16 @@
 %% 1000·ùÔØÌåÍ¼Ïñ×÷ÎªÍ¼Ïñ¿â
-% n= 1000;
-% C= C_BOSS_SRM; S= Feat;
-% C2.names= C.names(1:n); C2.F= C.F(1:n,:);
-% S2.names= S.names(1:n); S2.F= S.F(1:n,:);
-% PE = tutorial(C2, S2);
-% clearvars -except PE C_BOSS_SRM;
+n= 2000;
+C= C_BOSS_SRM; S= S_HILL_04_SRM;
+
+C2.names= C.names(1:n); C2.F= C.F(1:n,:);
+S2.names= S.names(1:n); S2.F= S.F(1:n,:);
+PE = tutorial(C2, S2);
+clearvars -except PE C_BOSS_SRM S_HILL_04_SRM;
 
 % -----------------------------------------------------
-
-PE= unmatch_detect(C_BOSS_SRM.F, S_HUGO_05_SRM.F, C_BOSS_SRM.F, S_Sharp.F);
-clearvars -except C_BOSS_SRM;
+% ³¡¾°I£¬Ê§Åä¼ì²â
+% PE= unmatch_detect(C_BOSS_SRM.F, S_HUGO_05_SRM.F, C_BOSS_SRM.F, S_Sharp.F);
+% clearvars -except C_BOSS_SRM;
 % -----------------------------------------------------
 
 %{

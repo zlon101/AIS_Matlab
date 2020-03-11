@@ -1,11 +1,13 @@
-function [stego,sharpImg]=embedAlgCZL(cover,payload,Am)
+function stego= embedAlgCZL(cover,payload,Am)
 % 失真函数设计
 %%
-sharpImg= sharpen(single(imread(cover)), str2double(Am));
+% sharpImg= sharpen(single(imread(cover)), str2double(Am));
+% [rhoP1,rhoM1]= CostHUGO_mex( sharpImg );
+% -------------------------------------------------------------------------
+cover= single(imread(cover));
+[rhoP1,rhoM1]= CMeanFilterT13( sharpen(cover,Am) );
 
-[rhoP1,rhoM1]= CostHUGO_mex( sharpImg );
-
-stego= EmbeddingSimulator(sharpImg, single(rhoP1), single(rhoM1), payload*numel(sharpImg), false);
+stego= EmbeddingSimulator(cover, single(rhoP1), single(rhoM1), payload*numel(cover), false);
 end
 
 %% HUGO

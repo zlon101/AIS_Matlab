@@ -32,7 +32,7 @@ for i=1:nBlockH
 end
 %}
 %% distortion cost
-a= 1;          %cH=1; cV=1; 
+a= 1;
 T= 3; G=(T-1)*0.5;  % T½×ÁìÓò, T=3,5,7
 rhoM1 = zeros(size(cover),'single');
 rhoP1 = zeros(size(cover),'single');
@@ -95,7 +95,7 @@ for row=1:size(cover, 1)
 end
 
 %% Æ½»¬ÂË²¨
-TFilter = 11;
+TFilter = 13;
 L= ones(TFilter);  %L = fspecial('gaussian',TFilter,sigma);
 rhoP1= imfilter(rhoP1, L,'symmetric','conv','same')./sum(L(:));
 
