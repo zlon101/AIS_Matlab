@@ -1,10 +1,11 @@
-function featuExtrct(inDir,varargin)
+function featuExtrct(inDir,nsamp,varargin)
 % F:\锐化_Am1.0_HUGO_03\ 1\  2\  E:\featData\**.mat
 % 提取从C++程序中提取出来的特征数据
 %%
-dimF=34671;  nsamp=1000;
+nsamp= str2double(nsamp);
+dimF= 34671;
 outPath = varargin{end};
-if(nargin==2)
+if(nargin==3)
   Feat = LoadFeature(inDir);
 else
   F=zeros(nsamp,dimF,'single'); names=cell(nsamp,1);
